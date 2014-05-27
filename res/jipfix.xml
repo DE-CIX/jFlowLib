@@ -1,0 +1,18 @@
+<?xml version="1.0"?> 
+<jipfix-muxer>
+  <listen>
+    <ip>192.168.63.10</ip>
+    <port>2055</port>
+    <startmissingdatarecorddetector>true</startmissingdatarecorddetector>
+  </listen>
+  <ping>
+  	<collectors>true</collectors>
+  	<ip>10.102.0.19</ip>
+  </ping>
+  <muxer type="plain"> 
+    <collector>
+      <ip>192.168.63.19</ip>
+      <port>2055</port>
+    </collector> 
+  </muxer>
+</jipfix-muxer>

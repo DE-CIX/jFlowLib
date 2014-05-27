@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="jsflow-0.2.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/sflow/sf.net-jar.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" mainClassHandleIdentifier="=sflow/src&lt;net.decix.jsflow.demo{DumpHeader.java[DumpHeader" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=sflow/src&lt;net.decix.jsflow.demo"/>
+        <javaElement handleIdentifier="=sflow/src&lt;net.decix.jsflow.header"/>
+        <javaElement handleIdentifier="=sflow/src&lt;net.decix.jsflow.util"/>
+        <file path="/sflow/gnu-public-license-2.txt"/>
+        <javaElement handleIdentifier="=sflow/src&lt;net.decix.jsflow"/>
+        <javaElement handleIdentifier="=sflow/test"/>
+    </selectedElements>
+    <fatjar builder="org.eclipse.jdt.ui.plain_jar_builder" launchConfig=""/>
+</jardesc>

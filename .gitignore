@@ -1,0 +1,5 @@
+/bin
+*.pcap
+*.log
+*.log.*
+*.sflow
