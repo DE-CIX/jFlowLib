@@ -4,21 +4,23 @@ jFlowlib
 jFlowLib is a Java library to parse and generate sFlow and IPFIX data. For this,
 jFlowLib consists of two parts:
  
-**jsFlow:** jsFlow is Java library for [sFlow](http://www.sflow.org/) (version 5). sFlow is an industry standard to
-monitor switches and routers. 
+**jsFlow:** jsFlow is Java library for [sFlow](http://www.sflow.org/) (version 5). sFlow
+is an industry standard to monitor switches and routers. 
 
-So far, jsFlow implements all the headers as used by Force10 E-series switches. However,
+So far, jsFlow implements all the headers as used by
+[Force10 E-series](http://www.dell.com/us/business/p/force10-e-series) switches. However,
 the jsFlow architecture is designed to be easily extensible which means it should be easy
 to implement support for additional vendors and switch models.
  
-**jIPFIX:** jIPFIX is Java library for [IPFIX](http://tools.ietf.org/wg/ipfix/). IPFIX is an IETF protocol and it was
-created based on the need for a common, universal standard of export for Internet
-Protocol flow information from routers, probes and other devices that are used by
-mediation systems, accounting/billing systems and network management systems to
-facilitate services such as measurement, accounting and billing. 
+**jIPFIX:** jIPFIX is Java library for [IPFIX](http://tools.ietf.org/wg/ipfix/). IPFIX is
+an IETF protocol and it was created based on the need for a common, universal standard of
+export for Internet Protocol flow information from routers, probes and other devices that
+are used by mediation systems, accounting/billing systems and network management systems
+to facilitate services such as measurement, accounting and billing. 
  
-The current version of jIPFIX supports all headers as used by the Alcatel Lucent
-7750 configured to export IPFIX based on the L2-IP flow template. However, the jIPFIX
+The current version of jIPFIX supports all headers as used by the
+[Alcatel Lucent 7750](http://www.alcatel-lucent.com/products/7750-service-router-0)
+configured to export IPFIX based on the L2-IP flow template. However, the jIPFIX
 architecture is designed to be easily extensible so that other flow templates can be
 easily added.
  
