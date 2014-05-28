@@ -56,4 +56,5 @@ The jFlowLib library is released under the
 Who develops and maintains the jFlowLib library?
 ------------------------------------------------
 The initial version of the jFlowLib library has been developed during an internal
-project at the [DE-CIX Management GmbH](https://www.de-cix.net).
+project at the [DE-CIX Management GmbH](https://www.de-cix.net). In case you have any
+questions regarding this project please contact Thomas King (thomas.king@de-cix.net).
