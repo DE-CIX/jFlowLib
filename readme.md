@@ -49,7 +49,8 @@ jFlowLib library.
 
 Under which License is jFlowLib available?
 ------------------------------------------
-The jFlowLib library is released under the [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
+The jFlowLib library is released under the
+[Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
 
 
 Who develops and maintains the jFlowLib library?
