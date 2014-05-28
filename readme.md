@@ -34,7 +34,7 @@ more specific use cases are listed in the following:
 that is sent by switches or routers jFlowLib can be used as a transparent sFlow or IPFIX
 proxy.
 * sFlow or IPFIX multiplexer: Typically, routers and switches support only a limited
-number of sFlow or IPFIX collecters. In case the sFlow or IPFIX traffic should be
+number of sFlow or IPFIX collectors. In case the sFlow or IPFIX traffic should be
 received by more than this number of sFlow or IPFIX collectors a multiplexer can be used
 to distribute the sFlow or IPFIX data to any number of sFlow or IPFIX collectors.
 
