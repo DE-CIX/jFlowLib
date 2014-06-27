@@ -348,7 +348,7 @@ public class L2IPDataRecord extends DataRecord {
 			lidr.setIpVersion(Utility.oneByteToShort(ipVersion));
 			// icmpTypeCodeIPv4
 			byte[] icmpTypeCodeIPv4 = new byte[2];
-			System.arraycopy(data, 109, flowLabelIPv6, 0, 2);
+			System.arraycopy(data, 109, icmpTypeCodeIPv4, 0, 2);
 			lidr.setIcmpTypeCodeIPv4(Utility.twoBytesToInteger(icmpTypeCodeIPv4));
 			return lidr;
 		} catch (Exception e) {
