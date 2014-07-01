@@ -249,6 +249,7 @@ public class L2IPDataRecord extends DataRecord {
 
 	public static L2IPDataRecord parse(byte[] data) throws HeaderParseException {
 		try {
+			// parsing
 			if (data.length < 111) throw new HeaderParseException("Data array too short.");
 			L2IPDataRecord lidr = new L2IPDataRecord();
 			// sourceMacAddress
