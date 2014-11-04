@@ -183,7 +183,7 @@ public class IPFIXMuxer implements Callable<Void> {
 				}
 			}
 			
-			FileHandler fh = new FileHandler(logPath + File.separator + "log.log", true);
+			FileHandler fh = new FileHandler(logPath + File.separator + "ipfix-muxer.log", 5 * 10485760, 20, true); // 20 x 50MByte
 			fh.setFormatter(new SimpleFormatter());
 			Logger l = Logger.getLogger("");
 			l.addHandler(fh);
