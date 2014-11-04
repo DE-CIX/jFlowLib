@@ -124,7 +124,7 @@ public class Utility {
 
 
 	public static final String dumpBytes(byte[] data) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		int i = 0;
 		for (byte b : data) {
 			i++;
@@ -142,7 +142,7 @@ public class Utility {
 		return string;
 	}
 
-	public static boolean isConifgured(Inet4Address inet4Address) {
+	public static boolean isConfigured(Inet4Address inet4Address) {
 		if (inet4Address == null) return false;
 		try {
 			if (inet4Address.equals(Inet4Address.getByName("0.0.0.0"))) return false;
@@ -152,7 +152,7 @@ public class Utility {
 		return true;
 	}
 
-	public static boolean isConifgured(Inet6Address inet6Address) {
+	public static boolean isConfigured(Inet6Address inet6Address) {
 		if (inet6Address == null) return false;
 		try {
 			if (inet6Address.equals(Inet6Address.getByName("0:0:0:0:0:0:0:0"))) return false;

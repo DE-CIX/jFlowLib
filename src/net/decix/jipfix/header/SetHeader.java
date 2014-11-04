@@ -185,7 +185,7 @@ public class SetHeader implements IPFIXEntity {
 	}
 	
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("Set ID: ");
 		sb.append(setID);
 		sb.append("\n");

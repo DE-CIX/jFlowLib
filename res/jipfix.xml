@@ -1,7 +1,7 @@
 <?xml version="1.0"?> 
 <jipfix-muxer>
   <listen>
-    <ip>192.168.63.10</ip>
+    <ip>10.102.200.5</ip>
     <port>2055</port>
     <startmissingdatarecorddetector>true</startmissingdatarecorddetector>
   </listen>

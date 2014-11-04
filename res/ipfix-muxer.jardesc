@@ -4,7 +4,7 @@
     <options buildIfNeeded="true" compress="true" descriptionLocation="/jFlowLib/res/ipfix-muxer.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
-    <manifest generateManifest="true" mainClassHandleIdentifier="=jFlowLib/src&lt;net.decix.jipfix.muxer{IPFIXMuxer.java[IPFIXMuxer" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+    <manifest generateManifest="true" mainClassHandleIdentifier="=jFlowLib/src&lt;net.decix.jipfix.muxer{IPFIXMuxerNew.java[IPFIXMuxerNew" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
         <sealing sealJar="false">
             <packagesToSeal/>
             <packagesToUnSeal/>

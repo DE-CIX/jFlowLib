@@ -422,7 +422,7 @@ public class L2IPDataRecord extends DataRecord {
 
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("SourceMacAddress: ");
 		sb.append(sourceMacAddress);
 		sb.append(", ");

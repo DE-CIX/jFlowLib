@@ -153,7 +153,7 @@ public class ConfigParser {
 	}
 	
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("Listen address: ");
 		sb.append(listenAddress.toString());
 		sb.append("\n");
