@@ -1,6 +1,7 @@
 package net.decix.jipfix;
 
 import java.net.Inet4Address;
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashSet;
@@ -14,6 +15,8 @@ import net.decix.jipfix.header.SamplingDataRecord;
 import net.decix.jipfix.header.SetHeader;
 import net.decix.jsflow.header.HeaderBytesException;
 import net.decix.jsflow.header.HeaderParseException;
+import net.decix.jsflow.util.IPv4AddressRandomizer;
+import net.decix.jsflow.util.IPv6AddressRandomizer;
 import net.decix.util.MacAddress;
 import net.decix.util.Utility;
 
@@ -40,6 +43,7 @@ public class PCAPanonyminizer {
 	
 //	private static PcapHandle handleWrite;
 	private static PcapDumper pcapDumper;
+
 	
 	public static void main(String[] args) throws PcapNativeException, NotOpenException, InterruptedException {
 
@@ -53,10 +57,15 @@ public class PCAPanonyminizer {
 		pcapDumper = pcapHandleReadOffline.dumpOpen(PCAP_FILE_WRITE);
 
 
+
 		
 		PacketListener packetListener = new PacketListener() {
 			int dumpedCounter = 0;
+			IPv4AddressRandomizer ipV4randomizer = new IPv4AddressRandomizer();
+			IPv6AddressRandomizer ipV6randomizer = new IPv6AddressRandomizer();
+
 			public void gotPacket(Packet fullPacket) {
+
 //				System.out.println(packet);
 				UdpPacket udpPacket = fullPacket.get(UdpPacket.class);
 
@@ -68,6 +77,8 @@ public class PCAPanonyminizer {
 				byte[] rawUpdPacketBytes = udpPacket.getRawData();
 				byte[] onlyIPFIXbytes = new byte[rawUpdPacketBytes.length - 8];
 				System.arraycopy(rawUpdPacketBytes, 8, onlyIPFIXbytes, 0, rawUpdPacketBytes.length - 8);
+				
+
 
 				try {
 					MessageHeader messageHeader = MessageHeader.parse(onlyIPFIXbytes);
@@ -77,15 +88,64 @@ public class PCAPanonyminizer {
 						for (DataRecord currentDataRecord : dataRecords) {
 							
 							try {
+									boolean foundipv6 = false;
+									boolean foundipv4 = false;
 									if (currentDataRecord instanceof L2IPDataRecord) {
 										L2IPDataRecord l2IPDataRecord = (L2IPDataRecord) currentDataRecord;
 										//System.out.println(l2IPDataRecord);
+										if (!l2IPDataRecord.getDestinationIPv6Address().toString().equals("/0:0:0:0:0:0:0:0")) {
+											// /2a03:2880:f01c:301:face:b00c:0:1
+											// /2a02:26f0:64:0:0:0:170e:5c09
+											// /2a02:26f0:64:0:0:0:170e:5c09
+											//System.out.println(l2IPDataRecord.getDestinationIPv6Address());
+											foundipv6 = true;
+										}
+										//System.out.println(l2IPDataRecord.getDestinationIPv4Address());
+										if (!l2IPDataRecord.getDestinationIPv4Address().toString().equals("/0.0.0.0")) {
+											foundipv4 = true;
+										}
+										//System.out.println(l2IPDataRecord.getDestinationIPv4Address());		
+
+										Inet4Address realDestinationIpv4 = l2IPDataRecord.getDestinationIPv4Address();
+										Inet4Address realSourceIpv4 = l2IPDataRecord.getSourceIPv4Address();
 										
-										Inet4Address realIpv4 =  (Inet4Address) Inet4Address.getByName("172.20.111.21");										
+										Inet6Address realDestinationIpv6 = l2IPDataRecord.getDestinationIPv6Address();
+										Inet6Address realSourceIpv6 = l2IPDataRecord.getSourceIPv6Address();
+										
 		
-										l2IPDataRecord.setDestinationIPv4Address(realIpv4);
+										
+										
+										Inet4Address fakeDestinationIpv4 = realDestinationIpv4;
+										Inet4Address fakeSourceIpv4 = realSourceIpv4;
+										
+										Inet6Address fakeDestinationIpv6 = realDestinationIpv6;
+										Inet6Address fakeSourceIpv6 = realSourceIpv6;
+										
+										
+										
+										// do faking here
+										
+										if (foundipv4) {
+											fakeDestinationIpv4 = (Inet4Address) ipV4randomizer.anomyzeAddress(realDestinationIpv4);
+											fakeSourceIpv4 = (Inet4Address) ipV4randomizer.anomyzeAddress(realSourceIpv4);
+											
+											l2IPDataRecord.setDestinationIPv4Address(fakeDestinationIpv4);
+											l2IPDataRecord.setSourceIPv4Address(fakeSourceIpv4);
+										}
+										
+										
+										if (foundipv6) {
+										
+											fakeSourceIpv6 = (Inet6Address) ipV6randomizer.anomyzeAddress(realSourceIpv6);
+											fakeDestinationIpv6 = (Inet6Address) ipV6randomizer.anomyzeAddress(realDestinationIpv6);
+											
+											l2IPDataRecord.setDestinationIPv6Address(fakeDestinationIpv6);
+											l2IPDataRecord.setSourceIPv6Address(fakeSourceIpv6);
+										}
+										
+										
 									}
-							} catch (UnknownHostException e) {
+							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
@@ -108,9 +168,9 @@ public class PCAPanonyminizer {
 					packetBuilderEthernet.payloadBuilder(packetBuilderIPv4);
 
 					Packet newPacket = packetBuilderEthernet.build();
-					pcapDumper.dump(newPacket, 0l, 0);
+					pcapDumper.dump(newPacket);
 					dumpedCounter++;
-					System.out.println("Dumped " + dumpedCounter + " packets");
+					//System.out.println("Dumped " + dumpedCounter + " packets");
 					
 					
 					if (onlyIPFIXbytes.length != messageHeader.getBytes().length) {
@@ -158,7 +218,11 @@ public class PCAPanonyminizer {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				//System.out.println("Count IPv6 Addresses: " + ipV6randomizer.getDatabaseSize());
+				//System.out.println("Count IPv4 Addresses: " + ipV4randomizer.getDatabaseSize());
 			}
+
+
 		};
 
 		pcapHandleReadOffline.loop(-1, packetListener);
@@ -179,5 +243,8 @@ public class PCAPanonyminizer {
 		for (MacAddress ma : destMacAddresses) {
 			System.out.println(ma);
 		}
+
+
+		
 	}  
 }  

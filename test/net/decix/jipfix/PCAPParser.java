@@ -26,9 +26,11 @@ import org.pcap4j.packet.UnknownPacket;
 
 public class PCAPParser {  
 //	private static final String PCAP_FILE_READ = "/Users/tking/Downloads/2014-03-05_IPFIX_capture01.pcap"; // IPFIX-Test.pcap
-	private static final String PCAP_FILE_READ = "/Users/tking/Downloads/IPFIX-Test.pcap";
+//	private static final String PCAP_FILE_READ = "/Users/tking/Downloads/IPFIX-Test.pcap";
+	private static final String PCAP_FILE_READ = "c:\\tmp\\trace.pcap";
 //	private static final String PCAP_FILE_READ = "/Users/tking/Downloads/ipfix-2014-04-14.2.pcap";
-	private static final String PCAP_FILE_WRITE = "/Users/tking/Downloads/IPFIX-Test_Created_By_JIPFIX.pcap";
+//	private static final String PCAP_FILE_WRITE = "/Users/tking/Downloads/IPFIX-Test_Created_By_JIPFIX.pcap";
+	private static final String PCAP_FILE_WRITE = "c:\\tmp\\trace_out.pcap";
 //	private static final String PCAP_FILE_WRITE = "/Users/tking/Downloads/IPFIX-Test_Created_By_JIPFIX2.pcap";
 	
 //	private static PcapHandle handleWrite;
@@ -50,7 +52,7 @@ public class PCAPParser {
 //				System.out.println(packet);
 				UdpPacket udpPacket = fullPacket.get(UdpPacket.class);
 				if (udpPacket == null) return;
-				if (udpPacket.getHeader().getDstPort().value() != 2055) return;
+				if (udpPacket.getHeader().getDstPort().value() != 2056) return;
 //				System.out.println(packet);
 				
 				byte[] bytes = udpPacket.getRawData();

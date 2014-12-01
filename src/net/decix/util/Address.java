@@ -81,6 +81,7 @@ public class Address {
 		address[2] = Utility.integerToOneByte(thirdOctet);
 		address[3] = Utility.integerToOneByte(fourthOctet);
 		return InetAddress.getByAddress(address);
+		
 	}
 	
 	public boolean equals(Object obj) {
