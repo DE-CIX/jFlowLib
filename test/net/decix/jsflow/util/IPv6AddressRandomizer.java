@@ -11,7 +11,7 @@ public class IPv6AddressRandomizer extends IPAddressRadomizer {
 		// TODO Auto-generated method stub
 		
 		int block1 = ((int) (Math.random()*60000));
-		int block2= ((int) (Math.random()*60000));
+		int block2 = ((int) (Math.random()*60000));
 		int block3 = ((int) (Math.random()*60000));
 		int block4 = ((int) (Math.random()*60000));
 		int block5 = ((int) (Math.random()*60000));

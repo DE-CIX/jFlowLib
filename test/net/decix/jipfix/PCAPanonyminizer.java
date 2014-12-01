@@ -47,9 +47,7 @@ public class PCAPanonyminizer {
 	
 	public static void main(String[] args) throws PcapNativeException, NotOpenException, InterruptedException {
 
-		final Set<Long> observationDomainIDs = new HashSet<Long>();
-		final Set<MacAddress> srcMacAddresses = new HashSet<MacAddress>();
-		final Set<MacAddress> destMacAddresses = new HashSet<MacAddress>();
+		//final int dumpedCounter = 0;
 
 		PcapHandle pcapHandleReadOffline = Pcaps.openOffline(PCAP_FILE_READ);
 		
@@ -60,11 +58,12 @@ public class PCAPanonyminizer {
 
 		
 		PacketListener packetListener = new PacketListener() {
-			int dumpedCounter = 0;
+
 			IPv4AddressRandomizer ipV4randomizer = new IPv4AddressRandomizer();
 			IPv6AddressRandomizer ipV6randomizer = new IPv6AddressRandomizer();
 
 			public void gotPacket(Packet fullPacket) {
+
 
 //				System.out.println(packet);
 				UdpPacket udpPacket = fullPacket.get(UdpPacket.class);
@@ -88,8 +87,8 @@ public class PCAPanonyminizer {
 						for (DataRecord currentDataRecord : dataRecords) {
 							
 							try {
-									boolean foundipv6 = false;
-									boolean foundipv4 = false;
+									boolean foundIPv6 = false;
+									boolean foundIPv4 = false;
 									if (currentDataRecord instanceof L2IPDataRecord) {
 										L2IPDataRecord l2IPDataRecord = (L2IPDataRecord) currentDataRecord;
 										//System.out.println(l2IPDataRecord);
@@ -98,11 +97,21 @@ public class PCAPanonyminizer {
 											// /2a02:26f0:64:0:0:0:170e:5c09
 											// /2a02:26f0:64:0:0:0:170e:5c09
 											//System.out.println(l2IPDataRecord.getDestinationIPv6Address());
-											foundipv6 = true;
+											foundIPv6 = true;
+										}
+										if (!l2IPDataRecord.getSourceIPv6Address().toString().equals("/0:0:0:0:0:0:0:0")) {
+											// /2a03:2880:f01c:301:face:b00c:0:1
+											// /2a02:26f0:64:0:0:0:170e:5c09
+											// /2a02:26f0:64:0:0:0:170e:5c09
+											//System.out.println(l2IPDataRecord.getDestinationIPv6Address());
+											foundIPv6 = true;
 										}
 										//System.out.println(l2IPDataRecord.getDestinationIPv4Address());
 										if (!l2IPDataRecord.getDestinationIPv4Address().toString().equals("/0.0.0.0")) {
-											foundipv4 = true;
+											foundIPv4 = true;
+										}
+										if (!l2IPDataRecord.getSourceIPv4Address().toString().equals("/0.0.0.0")) {
+											foundIPv4 = true;
 										}
 										//System.out.println(l2IPDataRecord.getDestinationIPv4Address());		
 
@@ -125,19 +134,19 @@ public class PCAPanonyminizer {
 										
 										// do faking here
 										
-										if (foundipv4) {
-											fakeDestinationIpv4 = (Inet4Address) ipV4randomizer.anomyzeAddress(realDestinationIpv4);
-											fakeSourceIpv4 = (Inet4Address) ipV4randomizer.anomyzeAddress(realSourceIpv4);
+										if (foundIPv4) {
+											fakeDestinationIpv4 = (Inet4Address) ipV4randomizer.staticRandomize(realDestinationIpv4);
+											fakeSourceIpv4 = (Inet4Address) ipV4randomizer.staticRandomize(realSourceIpv4);
 											
 											l2IPDataRecord.setDestinationIPv4Address(fakeDestinationIpv4);
 											l2IPDataRecord.setSourceIPv4Address(fakeSourceIpv4);
 										}
 										
 										
-										if (foundipv6) {
+										if (foundIPv6) {
 										
-											fakeSourceIpv6 = (Inet6Address) ipV6randomizer.anomyzeAddress(realSourceIpv6);
-											fakeDestinationIpv6 = (Inet6Address) ipV6randomizer.anomyzeAddress(realDestinationIpv6);
+											fakeSourceIpv6 = (Inet6Address) ipV6randomizer.staticRandomize(realSourceIpv6);
+											fakeDestinationIpv6 = (Inet6Address) ipV6randomizer.staticRandomize(realDestinationIpv6);
 											
 											l2IPDataRecord.setDestinationIPv6Address(fakeDestinationIpv6);
 											l2IPDataRecord.setSourceIPv6Address(fakeSourceIpv6);
@@ -169,7 +178,7 @@ public class PCAPanonyminizer {
 
 					Packet newPacket = packetBuilderEthernet.build();
 					pcapDumper.dump(newPacket);
-					dumpedCounter++;
+					//dumpedCounter++;
 					//System.out.println("Dumped " + dumpedCounter + " packets");
 					
 					
@@ -178,35 +187,6 @@ public class PCAPanonyminizer {
 					}
 
 					
-					boolean containsOtherThan306SetID = false;
-				 	for (SetHeader sh : messageHeader.getSetHeaders()) {
-						if (sh.getSetID() != 306) containsOtherThan306SetID = true;
-					}
-					if (containsOtherThan306SetID) {
-						//System.out.printf("frame #%d%n", packet.getFrameNumber());
-						System.out.println("Template?");
-					} else {
-						//								Random r = new Random();
-						//								int i = r.nextInt(100);
-						//								if (i <= 0) {							
-						//									System.out.printf("frame #%d%n", packet.getFrameNumber());
-						//									System.out.println(mh);
-						//								}
-						observationDomainIDs.add(messageHeader.getObservationDomainID());
-						for (SetHeader sh : messageHeader.getSetHeaders()) {
-							for (DataRecord dr : sh.getDataRecords()) {
-								if (dr instanceof L2IPDataRecord) {
-									L2IPDataRecord lidr = (L2IPDataRecord) dr;
-									srcMacAddresses.add(lidr.getSourceMacAddress());
-									destMacAddresses.add(lidr.getDestinationMacAddress());
-
-									if (Utility.isConifgured(lidr.getDestinationIPv6Address())) {
-										//												System.out.println(mh);			
-									}
-								}
-							}
-						}
-					}
 					
 				} catch (HeaderParseException e) {
 					// TODO Auto-generated catch block
@@ -220,6 +200,9 @@ public class PCAPanonyminizer {
 				}
 				//System.out.println("Count IPv6 Addresses: " + ipV6randomizer.getDatabaseSize());
 				//System.out.println("Count IPv4 Addresses: " + ipV4randomizer.getDatabaseSize());
+				
+
+
 			}
 
 
@@ -231,18 +214,9 @@ public class PCAPanonyminizer {
 		
 		pcapDumper.close();
 
-		System.out.println("\nObservation domain IDs: (" + observationDomainIDs.size() + ")");
-		for (Long id : observationDomainIDs) {
-			System.out.println(id);
-		}
-		System.out.println("\nSrc MacAddresses: (" + srcMacAddresses.size() + ")");
-		for (MacAddress ma : srcMacAddresses) {
-			System.out.println(ma);
-		}
-		System.out.println("\nDest MacAddresses: (" + destMacAddresses.size() + ")");
-		for (MacAddress ma : destMacAddresses) {
-			System.out.println(ma);
-		}
+
+
+
 
 
 		

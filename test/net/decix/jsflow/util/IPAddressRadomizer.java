@@ -6,7 +6,7 @@ import java.util.HashMap;
 public abstract class IPAddressRadomizer {
 	HashMap <InetAddress, InetAddress> ipDatabase = new HashMap<InetAddress, InetAddress>();
 	
-	public InetAddress anomyzeAddress(InetAddress realAddress) {
+	public InetAddress staticRandomize(InetAddress realAddress) {
 		
 		InetAddress fakeAdress = ipDatabase.get(realAddress);
 		if (fakeAdress != null) {
