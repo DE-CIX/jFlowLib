@@ -120,8 +120,8 @@ public class PCAPanonyminizer {
 
 
 									if (foundIPv4) {
-										fakeDestinationIpv4 = (Inet4Address) ipV4randomizer.staticRandomize(realDestinationIpv4);
-										fakeSourceIpv4 = (Inet4Address) ipV4randomizer.staticRandomize(realSourceIpv4);
+										fakeDestinationIpv4 = (Inet4Address) ipV4randomizer.randomize(realDestinationIpv4);
+										fakeSourceIpv4 = (Inet4Address) ipV4randomizer.randomize(realSourceIpv4);
 
 										l2IPDataRecord.setDestinationIPv4Address(fakeDestinationIpv4);
 										l2IPDataRecord.setSourceIPv4Address(fakeSourceIpv4);
@@ -129,8 +129,8 @@ public class PCAPanonyminizer {
 
 									if (foundIPv6) {
 
-										fakeSourceIpv6 = (Inet6Address) ipV6randomizer.staticRandomize(realSourceIpv6);
-										fakeDestinationIpv6 = (Inet6Address) ipV6randomizer.staticRandomize(realDestinationIpv6);
+										fakeSourceIpv6 = (Inet6Address) ipV6randomizer.randomize(realSourceIpv6);
+										fakeDestinationIpv6 = (Inet6Address) ipV6randomizer.randomize(realDestinationIpv6);
 
 										l2IPDataRecord.setDestinationIPv6Address(fakeDestinationIpv6);
 										l2IPDataRecord.setSourceIPv6Address(fakeSourceIpv6);
