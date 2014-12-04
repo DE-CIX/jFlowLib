@@ -38,11 +38,12 @@ import net.decix.util.AddressPort;
 import net.decix.util.Utility;
 import net.decix.util.UtilityException;
 
-import org.savarese.rocksaw.net.RawSocket;
 import org.savarese.vserv.tcpip.IPPacket;
 import org.savarese.vserv.tcpip.OctetConverter;
 import org.savarese.vserv.tcpip.UDPPacket;
 import org.xml.sax.SAXException;
+
+import com.savarese.rocksaw.net.RawSocket;
 
 public class IPFIXMuxer implements Callable<Void> {
 	private final static Logger LOGGER = Logger.getLogger(IPFIXMuxer.class.getName());
