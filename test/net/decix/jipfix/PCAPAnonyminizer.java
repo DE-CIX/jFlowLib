@@ -32,7 +32,7 @@ import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.UdpPacket;
 import org.pcap4j.packet.UnknownPacket;
 
-public class PCAPanonyminizer {
+public class PCAPAnonyminizer {
 	// private static final String PCAP_FILE_READ =
 	// "/Users/tking/Downloads/2014-03-05_IPFIX_capture01.pcap"; //
 	// IPFIX-Test.pcap
