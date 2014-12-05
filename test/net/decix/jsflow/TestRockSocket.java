@@ -13,10 +13,11 @@ package net.decix.jsflow;
 
 import java.net.InetAddress;
 
-import org.savarese.rocksaw.net.RawSocket;
 import org.savarese.vserv.tcpip.IPPacket;
 import org.savarese.vserv.tcpip.OctetConverter;
 import org.savarese.vserv.tcpip.UDPPacket;
+
+import com.savarese.rocksaw.net.RawSocket;
 
 public class TestRockSocket {
 	public static void main(String args[]) {

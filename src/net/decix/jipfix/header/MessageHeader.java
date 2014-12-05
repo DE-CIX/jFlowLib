@@ -156,7 +156,7 @@ public class MessageHeader implements IPFIXEntity {
 	}
 	
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("Version Number: ");
 		sb.append(versionNumber);
 		sb.append("\n");

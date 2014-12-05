@@ -404,7 +404,7 @@ public class L2IPDataRecord extends DataRecord {
 			// ipv6ExtensionHeaders
 			System.arraycopy(Utility.longToFourBytes(ipv6ExtensionHeaders), 0, data, 98, 4);
 			// nextHeaderIPv6
-			data[97] = Utility.shortToOneByte(nextHeaderIPv6);
+			data[102] = Utility.shortToOneByte(nextHeaderIPv6);
 			// flowLabelIPv6
 			System.arraycopy(Utility.longToFourBytes(flowLabelIPv6), 0, data, 103, 4);
 			// ipClassOfService
@@ -422,7 +422,7 @@ public class L2IPDataRecord extends DataRecord {
 
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("SourceMacAddress: ");
 		sb.append(sourceMacAddress);
 		sb.append(", ");

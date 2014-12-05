@@ -15,7 +15,7 @@ public class MissingDataRecordDetector {
 	
 	private HashMap<IPObservationDomain, Long> sequenceNumbers = new HashMap<IPObservationDomain, Long>(5000);
 	
-	public boolean detectMissing(DatagramPacket dp, MessageHeader mh) {
+	public synchronized boolean detectMissing(DatagramPacket dp, MessageHeader mh) {
 		// handle sequence number check
 		boolean detectedMissing = false;
 		IPObservationDomain currentIPObservationDomain = new IPObservationDomain(dp.getAddress(), mh.getObservationDomainID());

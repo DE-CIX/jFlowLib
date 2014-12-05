@@ -102,7 +102,7 @@ public class PCAPParser {
 									srcMacAddresses.add(lidr.getSourceMacAddress());
 									destMacAddresses.add(lidr.getDestinationMacAddress());
 
-									if (Utility.isConifgured(lidr.getDestinationIPv6Address())) {
+									if (Utility.isConfigured(lidr.getDestinationIPv6Address())) {
 										//												System.out.println(mh);			
 									}
 								}
