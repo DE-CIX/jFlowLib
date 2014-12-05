@@ -81,7 +81,6 @@ public class Address {
 		address[2] = Utility.integerToOneByte(thirdOctet);
 		address[3] = Utility.integerToOneByte(fourthOctet);
 		return InetAddress.getByAddress(address);
-		
 	}
 	
 	public boolean equals(Object obj) {
@@ -100,5 +99,4 @@ public class Address {
 	public int hashCode() {
 		return (firstOctet << 24) + (secondOctet << 16) + (thirdOctet << 8) + fourthOctet; 
 	}
-
 }

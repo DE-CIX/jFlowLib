@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.Vector;
 import java.util.concurrent.Callable;
@@ -58,11 +57,9 @@ public class IPFIXMuxer implements Callable<Void> {
 	@Override
 	public Void call() {
 		DatagramSocket dsReceive = null;
-		try {
-			
+		try {			
 			long packetReceiveCounter = 0;
-			//long packetReceivePrintCounter = 0;
-			
+
 			// listen on this address and port to receive IPFIX data coming from
 			// switches
 			Address listenAddress = cp.getListenAddress();
@@ -73,11 +70,8 @@ public class IPFIXMuxer implements Callable<Void> {
 			LOGGER.log(Level.FINE, "Creating Datagram socket with listenAdress " + listenAddress.getInetAddress() + " and Port" + listenPort);
 			
 			dsReceive = new DatagramSocket(listenPort, listenAddress.getInetAddress());
-			//dsReceive = new DatagramSocket(new InetSocketAddress("10.102.200.5", 2055));
-			LOGGER.log(Level.FINE, "setting Buffersize...");
 			dsReceive.setReceiveBufferSize(26214400);
-			LOGGER.log(Level.FINE, "setting Buffersize done");
-			//LOGGER.log(Level.FINE, "Datagram socket for receiving created. Listening at InetAddr:" +  dsReceive.getInetAddress().toString() + " LocalSocketAddr:?");
+			LOGGER.log(Level.FINE, "Datagram socket for receiving created. Listening at InetAddr:" +  dsReceive.getInetAddress().toString() + " LocalSocketAddr:?");
 
 			RawSocket socket = new RawSocket();
 			socket.open(RawSocket.PF_INET, RawSocket.getProtocolByName("udp"));
@@ -92,13 +86,7 @@ public class IPFIXMuxer implements Callable<Void> {
 				try {
 					byte[] data = new byte[65536];
 					dp = new DatagramPacket(data, data.length);
-					//LOGGER.log(Level.FINE, "invoking receive method");
 					dsReceive.receive(dp);
-					//LOGGER.log(Level.FINE, "invoking receive method done");
-					packetReceiveCounter++;
-					if (packetReceiveCounter % 5000 == 0) {
-						LOGGER.log(Level.FINE, "Received Packet Counter " + packetReceiveCounter);
-					}
 					
 					// prepare UDP packet
 					byte[] dataMuxer = null;

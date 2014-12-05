@@ -178,7 +178,7 @@ public class IPFIXMuxerMultiThreaded implements Callable<Void> {
 					// parsing is required
 					MessageHeader mh = MessageHeader.parse(dp.getData());
 					
-					LOGGER.log(Level.INFO, "Be aware: The missing datarecord detector is not working in this setup, so don't expect this information");
+					LOGGER.log(Level.FINEST, "Be aware: The missing datarecord detector is not working in this setup, so don't expect this information");
 
 					dataMuxer = mh.getBytes();
 				} else {

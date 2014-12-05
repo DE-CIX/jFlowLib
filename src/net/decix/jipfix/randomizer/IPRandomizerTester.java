@@ -1,11 +1,8 @@
-package net.decix.jipfix;
+package net.decix.jipfix.randomizer;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
-
-import net.decix.jsflow.util.IPv4AddressRandomizer;
-import net.decix.jsflow.util.IPv6AddressRandomizer;
 
 public class IPRandomizerTester {
 
@@ -37,10 +34,6 @@ public class IPRandomizerTester {
 		System.out.println("fake6: " + fakelDestinationIpv6_1); 
 		
 		Inet6Address fakelDestinationIpv6_2 = (Inet6Address) ipV6randomizer.randomize(realDestinationIpv6_1);	
-		System.out.println("fake6: " + fakelDestinationIpv6_2); 
-
-		
-		
+		System.out.println("fake6: " + fakelDestinationIpv6_2);
 	}
-
 }

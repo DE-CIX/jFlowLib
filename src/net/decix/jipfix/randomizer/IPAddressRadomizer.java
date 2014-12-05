@@ -1,4 +1,4 @@
-package net.decix.jsflow.util;
+package net.decix.jipfix.randomizer;
 
 import java.net.InetAddress;
 import java.util.HashMap;
@@ -16,16 +16,10 @@ public abstract class IPAddressRadomizer {
 		this.staticRandomization = staticRandomization;
 	}
 	
-
-	
 	public InetAddress randomize(InetAddress realAddress) {
-		
 		if (staticRandomization == false) {
-			
 			return ipAddressRandomizer();
-			
 		} else {
-			
 			InetAddress fakeAdress = ipDatabase.get(realAddress);
 			if (fakeAdress != null) {
 				return fakeAdress;
@@ -33,22 +27,16 @@ public abstract class IPAddressRadomizer {
 				fakeAdress = ipAddressRandomizer();
 				ipDatabase.put(realAddress, fakeAdress);
 				
-				return  ipDatabase.get(realAddress);
+				return ipDatabase.get(realAddress);
 			}
-			
 		}
-		
-
-	
 	}
 	
-	public int  getDatabaseSize() {
+	public int getDatabaseSize() {
 		return ipDatabase.size();
 	}
 	
 	protected abstract InetAddress ipAddressRandomizer();
-	
-
 }
 
 
