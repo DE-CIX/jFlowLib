@@ -11,7 +11,7 @@
  */
 package net.decix.jsflow;
 
-import net.decix.jsflow.header.SflowHeader;
+import net.decix.jsflow.header.SFlowHeader;
 import junit.framework.TestCase;
 
 public class SflowHeaderTest extends TestCase {
@@ -318,7 +318,7 @@ public class SflowHeaderTest extends TestCase {
 	
 	private byte data[] = data1;
 	
-	private SflowHeader rph;
+	private SFlowHeader rph;
 	
 	
 	public void setUp() throws Exception {
@@ -326,11 +326,11 @@ public class SflowHeaderTest extends TestCase {
 	}
 	
 	public void testParse() throws Exception {
-		rph = SflowHeader.parse(data);
+		rph = SFlowHeader.parse(data);
 	}
 	
 	public void testGetBytes() throws Exception {
-		rph = SflowHeader.parse(data);
+		rph = SFlowHeader.parse(data);
 		byte[] result = rph.getBytes();
 		for (int i = 0; i < Math.min(result.length, data.length); i++) {
 			assertEquals(data[i], result[i]);
@@ -338,6 +338,6 @@ public class SflowHeaderTest extends TestCase {
 	}
 	
 	public void testToString() throws Exception {
-		System.out.println(SflowHeader.parse(pkt2));
+		System.out.println(SFlowHeader.parse(pkt2));
 	}
 }

@@ -9,7 +9,7 @@
  * This software is licensed under the Apache License, version 2.0. A copy of 
  * the license agreement is included in this distribution.
  */
-package net.decix.jipfix.muxer;
+package net.decix.jsflow.muxer;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,10 +29,6 @@ import java.util.logging.SimpleFormatter;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import net.decix.jipfix.detector.MissingDataRecordDetector;
-import net.decix.jipfix.header.MessageHeader;
-import net.decix.jsflow.header.HeaderBytesException;
-import net.decix.jsflow.header.HeaderParseException;
 import net.decix.muxer.ConfigParser;
 import net.decix.muxer.Pinger;
 import net.decix.util.Address;
@@ -47,12 +43,12 @@ import org.xml.sax.SAXException;
 
 import com.savarese.rocksaw.net.RawSocket;
 
-public class IPFIXMuxer implements Callable<Void> {
-	private final static Logger LOGGER = Logger.getLogger(IPFIXMuxer.class.getName());
+public class SFlowMuxer implements Callable<Void> {
+	private final static Logger LOGGER = Logger.getLogger(SFlowMuxer.class.getName());
 	
 	private ConfigParser cp;
 	
-	public IPFIXMuxer(ConfigParser cp) {
+	public SFlowMuxer(ConfigParser cp) {
 		this.cp = cp;
 	}
 	
@@ -61,13 +57,13 @@ public class IPFIXMuxer implements Callable<Void> {
 		DatagramSocket dsReceive = null;
 		try {
 
-			// listen on this address and port to receive IPFIX data coming from
+			// listen on this address and port to receive sFlow data coming from
 			// switches
-			Address listenAddress = cp.getIPFIXListenAddress();
-			int listenPort = cp.getIPFIXListenPort();
+			Address listenAddress = cp.getSFlowListenAddress();
+			int listenPort = cp.getSFlowListenPort();
 
-			// list of destinations of plain IPFIX stream
-			Vector<AddressPort> plainDestinations = cp.getIPFIXPlainDestinations();
+			// list of destinations of plain sFlow stream
+			Vector<AddressPort> plainDestinations = cp.getSFlowPlainDestinations();
 			LOGGER.log(Level.FINE, "Creating Datagram socket with listenAdress " + listenAddress.getInetAddress() + " and Port" + listenPort);
 			
 			dsReceive = new DatagramSocket(listenPort, listenAddress.getInetAddress());
@@ -80,8 +76,6 @@ public class IPFIXMuxer implements Callable<Void> {
 			LOGGER.log(Level.FINE, "Raw socket for sending created.");
 
 			DatagramPacket dp = null;
-			
-			MissingDataRecordDetector mdrd = new MissingDataRecordDetector();
 						
 			while (true) {
 				try {
@@ -92,18 +86,9 @@ public class IPFIXMuxer implements Callable<Void> {
 					// prepare UDP packet
 					byte[] dataMuxer = null;
 
-					if (cp.isIPFIXStartMissingDataRecordDector()) {
-						// parsing is required
-						MessageHeader mh = MessageHeader.parse(dp.getData());
-						mdrd.detectMissing(dp, mh);
-
-						dataMuxer = mh.getBytes();
-					} else {
-						// no parsing required. So do fast and easy copying.
-						dataMuxer = new byte[dp.getLength()];
-						System.arraycopy(dp.getData(), 0, dataMuxer, 0, dp.getLength());
-					}
-
+					// no parsing required. So do fast and easy copying.
+					dataMuxer = new byte[dp.getLength()];
+					System.arraycopy(dp.getData(), 0, dataMuxer, 0, dp.getLength());
 
 					UDPPacket udp = new UDPPacket(28 + dataMuxer.length);
 					udp.setIPVersion(4);
@@ -114,7 +99,7 @@ public class IPFIXMuxer implements Callable<Void> {
 					udp.setUDPDataByteLength(dataMuxer.length);
 					udp.setUDPPacketLength(dataMuxer.length + 8);
 
-					udp.setDestinationPort(cp.getIPFIXListenPort());
+					udp.setDestinationPort(cp.getSFlowListenPort());
 					udp.setSourcePort(dp.getPort());
 
 					byte[] pktData = new byte[udp.size()];
@@ -132,16 +117,6 @@ public class IPFIXMuxer implements Callable<Void> {
 						udp.getData(pktData);
 						socket.write(ap.getAddress().getInetAddress(), pktData);
 					}
-				} catch (HeaderParseException hpe) {
-					LOGGER.log(Level.INFO, "HeaderParseException: " + Utility.dumpBytes(dp.getData()));
-					hpe.printStackTrace();
-					System.out.println("========================================================");
-					System.out.println("HeaderParseException: *");
-					System.out.println(Utility.dumpBytes(dp.getData()));
-					System.out.println("========================================================");
-				} catch (HeaderBytesException hbe) {
-					LOGGER.log(Level.INFO, "HeaderBytesException: " + Utility.dumpBytes(dp.getData()));
-					hbe.printStackTrace();
 				} catch (UtilityException ue) {
 					LOGGER.log(Level.INFO, "UtilityException: " + Utility.dumpBytes(dp.getData()));
 					ue.printStackTrace();
@@ -160,13 +135,13 @@ public class IPFIXMuxer implements Callable<Void> {
 	}
 	
 	public static void main(String args[]) {
-		String cfgPath = "/opt/jipfix-muxer/etc";
-		String logPath = "/opt/jipfix-muxer/log";
+		String cfgPath = "/opt/jsflow-muxer/etc";
+		String logPath = "/opt/jsflow-muxer/log";
 		
 		
 		try {
 			if (args.length == 0) {
-				System.out.println("Usage: java -cp jipfix.jar net.decix.jipfix.muxer [options]\n");
+				System.out.println("Usage: java -cp jflowlib.jar net.decix.jsflow.muxer.SFlowMuxer [options]\n");
 				System.out.println("Options:");
 				System.out.println("        -cfg: path to the jipfix.xml config file");
 				System.out.println("        -log: path to log file");
@@ -201,11 +176,11 @@ public class IPFIXMuxer implements Callable<Void> {
 			ConfigParser cp = new ConfigParser();
 			cp.loadConfig(cfgPath);
 			
-			IPFIXMuxer ipfixMuxer = new IPFIXMuxer(cp);
-			ExecutorService executorIPFIXMuxer = Executors.newFixedThreadPool(1);
-			executorIPFIXMuxer.submit(ipfixMuxer);
+			SFlowMuxer sflowMuxer = new SFlowMuxer(cp);
+			ExecutorService executorSFlowMuxer = Executors.newFixedThreadPool(1);
+			executorSFlowMuxer.submit(sflowMuxer);
 
-			LOGGER.log(Level.FINE, "IPFIX muxer startet");
+			LOGGER.log(Level.FINE, "sFlow muxer startet");
 			
 			Pinger pinger = new Pinger(cp);
 			ScheduledExecutorService executorPinger = Executors.newScheduledThreadPool(1);

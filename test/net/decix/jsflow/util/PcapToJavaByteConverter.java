@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 public class PcapToJavaByteConverter {
 
 	public static void main(String args[]) throws Exception {
-		BufferedReader br = new BufferedReader(new FileReader(new File("/home/tking/workspace/sflow/test/net/decix/jsflow/utils/sflowByte2.txt")));
+		BufferedReader br = new BufferedReader(new FileReader(new File("test/net/decix/jsflow/utils/sflowByte2.txt")));
 		
 		String byteString = new String("byte[] data = {");
 		

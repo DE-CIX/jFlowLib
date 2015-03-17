@@ -9,7 +9,7 @@
  * This software is licensed under the Apache License, version 2.0. A copy of 
  * the license agreement is included in this distribution.
  */
-package net.decix.jipfix.muxer;
+package net.decix.jsflow.muxer;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +34,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import net.decix.jipfix.header.MessageHeader;
 import net.decix.jsflow.header.HeaderBytesException;
 import net.decix.jsflow.header.HeaderParseException;
+import net.decix.jsflow.header.SFlowHeader;
 import net.decix.muxer.ConfigParser;
 import net.decix.muxer.Pinger;
 import net.decix.util.Address;
@@ -48,12 +49,12 @@ import org.xml.sax.SAXException;
 
 import com.savarese.rocksaw.net.RawSocket;
 
-public class IPFIXMuxerMultiThreaded implements Callable<Void> {
-	private final static Logger LOGGER = Logger.getLogger(IPFIXMuxerMultiThreaded.class.getName());
+public class SFlowMuxerMultiThreaded implements Callable<Void> {
+	private final static Logger LOGGER = Logger.getLogger(SFlowMuxerMultiThreaded.class.getName());
 	
 	private ConfigParser cp;
 	
-	public IPFIXMuxerMultiThreaded(ConfigParser cp) {
+	public SFlowMuxerMultiThreaded(ConfigParser cp) {
 		this.cp = cp;
 	}
 	
@@ -61,13 +62,13 @@ public class IPFIXMuxerMultiThreaded implements Callable<Void> {
 	public Void call() {
 		DatagramSocket dsReceive = null;
 		try {
-			// listen on this address and port to receive IPFIX data coming from
+			// listen on this address and port to receive sFlow data coming from
 			// switches
-			Address listenAddress = cp.getIPFIXListenAddress();
-			int listenPort = cp.getIPFIXListenPort();
+			Address listenAddress = cp.getSFlowListenAddress();
+			int listenPort = cp.getSFlowListenPort();
 
-			// list of destinations of plain IPFIX stream
-			Vector<AddressPort> plainDestinations = cp.getIPFIXPlainDestinations();
+			// list of destinations of plain sFlow stream
+			Vector<AddressPort> plainDestinations = cp.getSFlowPlainDestinations();
 
 			dsReceive = new DatagramSocket(listenPort, listenAddress.getInetAddress());
 			dsReceive.setReceiveBufferSize(26214400);
@@ -108,9 +109,9 @@ public class IPFIXMuxerMultiThreaded implements Callable<Void> {
 		
 		try {
 			if (args.length == 0) {
-				System.out.println("Usage: java -jar jipfix.jar [options]\n");
+				System.out.println("Usage: java -cp jflowlib.jar net.decix.sflow.muxer.SFlowMuxerMultiThreaded [options]\n");
 				System.out.println("Options:");
-				System.out.println("        -cfg: path to the jipfix.xml config file");
+				System.out.println("        -cfg: path to the jflowlib.xml config file");
 				System.out.println("        -log: path to log file");
 				System.out.println();
 				System.exit(0);
@@ -130,7 +131,7 @@ public class IPFIXMuxerMultiThreaded implements Callable<Void> {
 				}
 			}
 			
-			FileHandler fh = new FileHandler(logPath + File.separator + "ipfix-muxer.log", 5 * 10485760, 20, true); // 20 x 50MByt
+			FileHandler fh = new FileHandler(logPath + File.separator + "jsflow-muxer.log", 5 * 10485760, 20, true); // 20 x 50MByt
 			fh.setFormatter(new SimpleFormatter());
 			Logger l = Logger.getLogger("");
 			l.addHandler(fh);
@@ -139,10 +140,10 @@ public class IPFIXMuxerMultiThreaded implements Callable<Void> {
 			ConfigParser cp = new ConfigParser();
 			cp.loadConfig(cfgPath);
 
-			IPFIXMuxerMultiThreaded ipfixMuxer = new IPFIXMuxerMultiThreaded(cp);
-			ExecutorService executorIPFIXMuxer = Executors.newFixedThreadPool(1);
-			executorIPFIXMuxer.submit(ipfixMuxer);
-			LOGGER.log(Level.FINE, "IPFIX muxer startet.");
+			SFlowMuxerMultiThreaded ipfixMuxer = new SFlowMuxerMultiThreaded(cp);
+			ExecutorService executorSFlowMuxer = Executors.newFixedThreadPool(1);
+			executorSFlowMuxer.submit(ipfixMuxer);
+			LOGGER.log(Level.FINE, "sFlow muxer startet.");
 			
 			Pinger pinger = new Pinger(cp);
 			ScheduledExecutorService executorPinger = Executors.newScheduledThreadPool(1);
@@ -176,13 +177,13 @@ public class IPFIXMuxerMultiThreaded implements Callable<Void> {
 				// prepare UDP packet
 				byte[] dataMuxer = null;
 
-				if (cp.isIPFIXStartMissingDataRecordDector()) {
+				if (cp.isSFlowStartMissingDataRecordDector()) {
 					// parsing is required
-					MessageHeader mh = MessageHeader.parse(dp.getData());
+					SFlowHeader rph = SFlowHeader.parse(dp.getData());
 					
 					LOGGER.log(Level.FINEST, "Be aware: The missing datarecord detector is not working in this setup, so don't expect this information");
 
-					dataMuxer = mh.getBytes();
+					dataMuxer = rph.getBytes();
 				} else {
 					// no parsing required. So do fast and easy copying.
 					dataMuxer = new byte[dp.getLength()];

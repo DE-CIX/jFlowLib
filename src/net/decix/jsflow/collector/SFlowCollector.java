@@ -23,9 +23,9 @@ import net.decix.jsflow.header.ExpandedFlowSampleHeader;
 import net.decix.jsflow.header.FlowRecordHeader;
 import net.decix.jsflow.header.HeaderParseException;
 import net.decix.jsflow.header.SampleDataHeader;
-import net.decix.jsflow.header.SflowHeader;
+import net.decix.jsflow.header.SFlowHeader;
 
-public class SflowCollector {
+public class SFlowCollector {
 	public static void main(String args[]) {
 		try {
 			DatagramSocket ds = new DatagramSocket(6343);
@@ -33,7 +33,7 @@ public class SflowCollector {
 				byte[] data = new byte[65536];
 				DatagramPacket dp = new DatagramPacket(data, data.length);
 				ds.receive(dp);
-				SflowHeader rph = SflowHeader.parse(dp.getData());
+				SFlowHeader rph = SFlowHeader.parse(dp.getData());
 				System.out.println(rph.getAddressAgent().toString());
 				Vector<SampleDataHeader> sdhs = rph.getSampleDataHeaders();
 				for (SampleDataHeader sdh : sdhs) {

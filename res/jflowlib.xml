@@ -1,4 +1,5 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
+<jflowlib-muxer>
 <jipfix-muxer>
   <listen>
     <ip>10.102.200.5</ip>
@@ -16,3 +17,20 @@
     </collector> 
   </muxer>
 </jipfix-muxer>
+<jsflow-muxer>
+  <listen>
+    <ip>10.102.200.5</ip>
+    <port>2055</port>
+  </listen>
+  <ping>
+    <collectors>true</collectors>
+    <ip>10.102.0.19</ip>
+  </ping>
+  <muxer type="plain"> 
+    <collector>
+      <ip>192.168.63.19</ip>
+      <port>2055</port>
+    </collector> 
+  </muxer>
+</jsflow-muxer>
+</jflowlib-muxer>

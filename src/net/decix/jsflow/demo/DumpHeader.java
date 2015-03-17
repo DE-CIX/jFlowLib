@@ -25,7 +25,7 @@ import net.decix.jsflow.header.FlowRecordHeader;
 import net.decix.jsflow.header.GenericInterfaceCounterHeader;
 import net.decix.jsflow.header.HeaderParseException;
 import net.decix.jsflow.header.SampleDataHeader;
-import net.decix.jsflow.header.SflowHeader;
+import net.decix.jsflow.header.SFlowHeader;
 import net.decix.util.Utility;
 
 public class DumpHeader {
@@ -43,7 +43,7 @@ public class DumpHeader {
 					ds.receive(dp);
 					System.out.println();
 					System.out.println("Pkt recvd: " + dp.getAddress().toString() + ":" + dp.getPort() + " -> " + ds.getLocalAddress().toString() + ":" + ds.getLocalPort());
-					SflowHeader rph = SflowHeader.parse(dp.getData());
+					SFlowHeader rph = SFlowHeader.parse(dp.getData());
 					Vector<SampleDataHeader> sdhs = rph.getSampleDataHeaders();
 					sdhs = rph.getSampleDataHeaders();
 					for (SampleDataHeader sdh : sdhs) {

@@ -1,4 +1,4 @@
-package net.decix.jipfix.muxer;
+package net.decix.muxer;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -24,7 +24,7 @@ public class Pinger implements Runnable {
 	}
 
 	public void run() {
-		for (Address a : cp.getPingIPs()) {
+		for (Address a : cp.getIPFIXPingIPs()) {
 			try {
 				a.getInetAddress().isReachable(500);
 			} catch (UnknownHostException e) {
@@ -37,8 +37,37 @@ public class Pinger implements Runnable {
 			}
 		}
 		
-		if (cp.isPingCollectors()) {
-			Vector<AddressPort> plainDestinations = cp.getPlainDestinations();
+		for (Address a : cp.getSFlowPingIPs()) {
+			try {
+				a.getInetAddress().isReachable(500);
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			} catch (ConnectException ce) {
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (UtilityException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (cp.isIPFIXPingCollectors()) {
+			Vector<AddressPort> plainDestinations = cp.getIPFIXPlainDestinations();
+			for (AddressPort ap : plainDestinations) {
+				try {
+					ap.getAddress().getInetAddress().isReachable(500);
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
+				} catch (ConnectException ce) {
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (UtilityException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		if (cp.isSFlowPingCollectors()) {
+			Vector<AddressPort> plainDestinations = cp.getSFlowPlainDestinations();
 			for (AddressPort ap : plainDestinations) {
 				try {
 					ap.getAddress().getInetAddress().isReachable(500);
@@ -58,9 +87,9 @@ public class Pinger implements Runnable {
 		String cfgPath = "/opt/jipfix-muxer/etc";
 		try {
 			if (args.length == 0) {
-				System.out.println("Usage: java -cp jipfix.jar net.decix.jipfix.muxer.Pinger [options]\n");
+				System.out.println("Usage: java -cp jflowlib.jar net.decix.muxer.Pinger [options]\n");
 				System.out.println("Options:");
-				System.out.println("        -cfg: path to the jipfix.xml file");
+				System.out.println("        -cfg: path to the jflowlib.xml file");
 				System.out.println();
 				System.exit(0);
 			}

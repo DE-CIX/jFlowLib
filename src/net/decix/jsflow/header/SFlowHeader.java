@@ -17,7 +17,7 @@ import net.decix.util.Address;
 import net.decix.util.MacAddress;
 import net.decix.util.Utility;
 
-public class SflowHeader {
+public class SFlowHeader {
 	private long version; // 2, 4, 5
 	private long ipVersionAgent; // 1=v4, 2=v6
 	private Address addressAgent;
@@ -28,7 +28,7 @@ public class SflowHeader {
 	private long numberSamples; // in datagrams
 	private Vector<SampleDataHeader> sampleDataHeaders;
 
-	public SflowHeader() {
+	public SFlowHeader() {
 		sampleDataHeaders = new Vector<SampleDataHeader>();
 	}
 
@@ -98,10 +98,10 @@ public class SflowHeader {
 		return sampleDataHeaders;
 	}
 
-	public static SflowHeader parse(byte[] data) throws HeaderParseException {
+	public static SFlowHeader parse(byte[] data) throws HeaderParseException {
 		try {
 			if (data.length < 28) throw new HeaderParseException("Data array too short.");
-			SflowHeader rph = new SflowHeader();
+			SFlowHeader rph = new SFlowHeader();
 			// sflow version
 			byte[] version = new byte[4];
 			System.arraycopy(data, 0, version, 0, 4);
