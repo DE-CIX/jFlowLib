@@ -8,7 +8,8 @@ jFlowLib consists of two parts:
 is an industry standard to monitor switches and routers. 
 
 So far, jsFlow implements all the headers as used by
-[Force10 E-series](http://www.dell.com/us/business/p/force10-e-series) switches. However,
+[Force10 E-series](http://www.dell.com/us/business/p/force10-e-series) and
+[Alcatel Lucent 7750](http://www.alcatel-lucent.com/products/7750-service-router-0) switches. However,
 the jsFlow architecture is designed to be easily extensible which means it should be easy
 to implement support for additional vendors and switch models.
  
