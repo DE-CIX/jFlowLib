@@ -1,4 +1,4 @@
-jFlowlib
+jFlowLib
 ========
  
 jFlowLib is a Java library to parse and generate sFlow and IPFIX data. For this,
