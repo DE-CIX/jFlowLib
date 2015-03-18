@@ -2,7 +2,7 @@ package net.decix.alu;
 /*
  * This file is part of jFlowLib.
  * 
- * Copyright (c) 2009 DE-CIX Management GmbH <http://www.de-cix.net> - All rights
+ * Copyright (c) 2015 DE-CIX Management GmbH <http://www.de-cix.net> - All rights
  * reserved.
  * 
  * Author: Thomas King <thomas.king@de-cix.net>
