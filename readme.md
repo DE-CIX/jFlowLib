@@ -40,7 +40,7 @@ proxy.
 number of sFlow or IPFIX collectors. In case the sFlow or IPFIX traffic should be
 received by more than this number of sFlow or IPFIX collectors a multiplexer can be used
 to distribute the sFlow or IPFIX data to any number of sFlow or IPFIX collectors.
-* Randomizer: Removing personal data such as IP addresses by randomizing these data fields.
+* Randomizer: Removing personal data such as IP addresses by randomizing specific data fields.
 
 
 What do you need to run jFlowLib?
