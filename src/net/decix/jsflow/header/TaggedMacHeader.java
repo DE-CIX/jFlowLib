@@ -1,5 +1,7 @@
 package net.decix.jsflow.header;
 
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 
 public class TaggedMacHeader extends MacHeader {

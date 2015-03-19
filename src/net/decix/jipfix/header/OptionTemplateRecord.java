@@ -3,8 +3,8 @@ package net.decix.jipfix.header;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.decix.jsflow.header.HeaderBytesException;
-import net.decix.jsflow.header.HeaderParseException;
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 
 /**
@@ -128,10 +128,19 @@ public class OptionTemplateRecord extends Record {
 
 	@Override
 	public String toString() {
-		return "OptionTemplateRecord [templateID=" + templateID
-				+ ", fieldCount=" + fieldCount + ", scopeFieldCount="
-				+ scopeFieldCount + ", informationElements="
-				+ informationElements + ", scopeInformationElements="
-				+ scopeInformationElements + "]";
+		StringBuilder sb = new StringBuilder();
+		sb.append("[OptionTemplateRecord]: ");
+		sb.append("Template ID: ");
+		sb.append(templateID);
+		sb.append(", Field count: ");
+		sb.append(fieldCount);
+		sb.append(", Scope field count: ");
+		sb.append(scopeFieldCount);
+		sb.append(", Information elements: ");
+		sb.append(informationElements);
+		sb.append(", Scope Information elements: ");
+		sb.append(scopeInformationElements);
+		
+		return sb.toString();
 	}
 }

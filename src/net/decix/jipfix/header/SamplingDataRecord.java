@@ -1,7 +1,7 @@
 package net.decix.jipfix.header;
 
-import net.decix.jsflow.header.HeaderBytesException;
-import net.decix.jsflow.header.HeaderParseException;
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 
 public class SamplingDataRecord extends DataRecord {
@@ -89,9 +89,17 @@ public class SamplingDataRecord extends DataRecord {
 
 	@Override
 	public String toString() {
-		return "SamplingDataRecord [observationDomainId=" + observationDomainId
-				+ ", selectorAlgorithm=" + selectorAlgorithm
-				+ ", samplingPacketInterval=" + samplingPacketInterval
-				+ ", samplingPacketSpace=" + samplingPacketSpace + "]";
+		StringBuilder sb = new StringBuilder();
+		sb.append("[SamplingDataRecord]: ");
+		sb.append(" Observation domain ID: ");
+		sb.append(observationDomainId);
+		sb.append(", Selector algorithm: ");
+		sb.append(selectorAlgorithm);
+		sb.append(", Sampling packet interval: ");
+		sb.append(samplingPacketInterval);
+		sb.append(", Sampling packet space: ");
+		sb.append(samplingPacketSpace);
+		
+		return sb.toString();
 	}
 }

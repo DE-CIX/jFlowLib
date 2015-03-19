@@ -3,8 +3,8 @@ package net.decix.jipfix.header;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.decix.jsflow.header.HeaderBytesException;
-import net.decix.jsflow.header.HeaderParseException;
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 
 /**
@@ -92,8 +92,15 @@ public class TemplateRecord extends Record {
 	
 	@Override
 	public String toString() {
-		return "TemplateRecord [templateID=" + templateID + ", fieldCount="
-				+ fieldCount + ", informationElements=" + informationElements
-				+ "]";
+		StringBuilder sb = new StringBuilder();
+		sb.append("[TemplateRecord]: ");
+		sb.append("Template ID: ");
+		sb.append(templateID);
+		sb.append(", Field count: ");
+		sb.append(fieldCount);
+		sb.append("Information elements: ");
+		sb.append(informationElements);
+		
+		return sb.toString();
 	}
 }

@@ -11,6 +11,8 @@
  */
 package net.decix.jsflow.header;
 
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 
 public class CounterRecordHeader {
@@ -121,16 +123,20 @@ public class CounterRecordHeader {
 		}
 	}
 	
-	public String toString(){
-		String retVal = "\n[CounterRecordHeader]" 	+ "\n\tFormat=" + this.getCounterDataFormat() 
-													+ "\n\tLength=" + this.getCounterDataLength();
-		if(this.getCounterDataFormat() == CounterRecordHeader.GENERICINTERFACECOUNTER){
-			retVal += genericInterfaceCounter;
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[CounterRecordHeader]: ");
+		sb.append("Format: ");
+		sb.append(getCounterDataFormat());
+		sb.append(", Length:");
+		sb.append(getCounterDataLength());
+		if (this.getCounterDataFormat() == CounterRecordHeader.GENERICINTERFACECOUNTER){
+			sb.append(genericInterfaceCounter);
 		}else if(this.getCounterDataFormat() == CounterRecordHeader.ETHERNETINTERFACECOUNTER){
-			retVal += ethernetInterfaceCounter;
+			sb.append(ethernetInterfaceCounter);
 		}else{
-			retVal += "unsupported CounterRecordData format";
+			sb.append("unsupported CounterRecordData format");
 		}
-		return retVal;
+		return sb.toString();
 	}
 }

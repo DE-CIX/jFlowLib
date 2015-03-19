@@ -6,7 +6,7 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 
 import net.decix.jipfix.header.MessageHeader;
-import net.decix.jsflow.header.HeaderParseException;
+import net.decix.util.HeaderParseException;
 
 public class IPFIXCollector {
 	public static void main(String args[]) {

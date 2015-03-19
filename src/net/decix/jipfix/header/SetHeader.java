@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.decix.jsflow.header.HeaderBytesException;
-import net.decix.jsflow.header.HeaderParseException;
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 
 /**
@@ -186,32 +186,31 @@ public class SetHeader implements IPFIXEntity {
 	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
+		sb.append("[SetHeader]:");
 		sb.append("Set ID: ");
 		sb.append(setID);
-		sb.append("\n");
-		sb.append("Length: ");
+		sb.append(", Length: ");
 		sb.append(length);
-		sb.append("\n");
-		sb.append("Data records: (");
+		sb.append(", Data records: ");
 		sb.append(dataRecords.size());
-		sb.append(")\n");
+		sb.append(", ");
 		for (DataRecord record : dataRecords) {
 			sb.append(record);
-			sb.append("\n");
+			sb.append(", ");
 		}
-		sb.append("Template records: (");
+		sb.append("Template records: ");
 		sb.append(templateRecords.size());
-		sb.append(")\n");
+		sb.append(", ");
 		for (TemplateRecord record : templateRecords) {
 			sb.append(record);
-			sb.append("\n");
+			sb.append(", ");
 		}
 		sb.append("Option template records: (");
 		sb.append(optionTemplateRecords.size());
-		sb.append(")\n");
+		sb.append(", ");
 		for (OptionTemplateRecord record : optionTemplateRecords) {
 			sb.append(record);
-			sb.append("\n");
+			sb.append(", ");
 		}
 		return sb.toString();
 	}

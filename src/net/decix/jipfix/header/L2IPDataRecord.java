@@ -4,8 +4,8 @@ import java.math.BigInteger;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 
-import net.decix.jsflow.header.HeaderBytesException;
-import net.decix.jsflow.header.HeaderParseException;
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.MacAddress;
 import net.decix.util.Utility;
 
@@ -423,6 +423,7 @@ public class L2IPDataRecord extends DataRecord {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
+		sb.append("[L2IPDataRecord]: ");
 		sb.append("SourceMacAddress: ");
 		sb.append(sourceMacAddress);
 		sb.append(", ");

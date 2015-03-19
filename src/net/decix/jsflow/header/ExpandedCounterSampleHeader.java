@@ -13,6 +13,8 @@ package net.decix.jsflow.header;
 
 import java.util.Vector;
 
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 
 public class ExpandedCounterSampleHeader {
@@ -133,14 +135,22 @@ public class ExpandedCounterSampleHeader {
 		}
 	}
 	
-	public String toString(){
-		String retVal = "\n[ExpandedCounterSampleHeader]" + "\n\tSequenceNumber=" + this.getSequenceNumber() 
-														 + "\n\tSourceIDtype=" + this.getSourceIDType() 
-														 + "\n\tSourceIDindex=" + this.getSourceIDIndex()
-														 + "\n\tCounterRecords(" + this.getNumberCounterRecords() + ")";
-		for(CounterRecordHeader crh : this.getCounterRecords()){
-			retVal += crh;
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[ExpandedCounterSampleHeader]: ");
+		sb.append(" Sequence number: ");
+		sb.append(getSequenceNumber());
+		sb.append(", Source ID type: ");
+		sb.append(getSourceIDType());
+		sb.append(", Source ID index: ");
+		sb.append(getSourceIDIndex());
+		sb.append(", Counter records: ");
+		sb.append(getNumberCounterRecords());
+		for (CounterRecordHeader crh : this.getCounterRecords()) {
+			sb.append(crh);
+			sb.append(" ");
 		}
-		return retVal;
+		
+		return sb.toString();
 	}
 }

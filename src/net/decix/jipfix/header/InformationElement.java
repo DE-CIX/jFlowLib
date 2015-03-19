@@ -1,7 +1,7 @@
 package net.decix.jipfix.header;
 
-import net.decix.jsflow.header.HeaderBytesException;
-import net.decix.jsflow.header.HeaderParseException;
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 
 public class InformationElement implements IPFIXEntity {

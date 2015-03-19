@@ -13,6 +13,8 @@ package net.decix.jsflow.header;
 
 import java.util.Vector;
 
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 
 public class ExpandedFlowSampleHeader {

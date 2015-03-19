@@ -31,12 +31,12 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import net.decix.jipfix.detector.MissingDataRecordDetector;
 import net.decix.jipfix.header.MessageHeader;
-import net.decix.jsflow.header.HeaderBytesException;
-import net.decix.jsflow.header.HeaderParseException;
 import net.decix.muxer.ConfigParser;
 import net.decix.muxer.Pinger;
 import net.decix.util.Address;
 import net.decix.util.AddressPort;
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 import net.decix.util.UtilityException;
 

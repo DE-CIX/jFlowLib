@@ -23,9 +23,9 @@ import net.decix.jsflow.header.ExpandedCounterSampleHeader;
 import net.decix.jsflow.header.ExpandedFlowSampleHeader;
 import net.decix.jsflow.header.FlowRecordHeader;
 import net.decix.jsflow.header.GenericInterfaceCounterHeader;
-import net.decix.jsflow.header.HeaderParseException;
 import net.decix.jsflow.header.SampleDataHeader;
 import net.decix.jsflow.header.SFlowHeader;
+import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 
 public class DumpHeader {

@@ -9,11 +9,13 @@
  * This software is licensed under the Apache License, version 2.0. A copy of 
  * the license agreement is included in this distribution.
  */
-package net.decix.jsflow.header;
+package net.decix.util;
 
-public class HeaderBytesException extends Exception {
-	
-	public HeaderBytesException(String msg) {
+public class HeaderException extends Exception {
+
+	private static final long serialVersionUID = -2665785157477764385L;
+
+	public HeaderException(String msg) {
 		super(msg);
 	}
 }

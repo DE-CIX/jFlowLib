@@ -11,6 +11,8 @@
  */
 package net.decix.jsflow.header;
 
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 
 public class FlowRecordHeader {
@@ -87,10 +89,16 @@ public class FlowRecordHeader {
 		}
 	}
 	
-	public String toString(){
-		String retVal = "\n[FlowRecordHeader]" + "\n\tFormat=" + this.getFlowDataFormat()
-											+ "\n\tLength=" + this.getFlowDataLength()
-											+ this.getRawPacketHeader();
-		return retVal;
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[FlowRecordHeader]:");
+		sb.append("Format: ");
+		sb.append(getFlowDataFormat());
+		sb.append(", Length: ");
+		sb.append(getFlowDataLength());
+		sb.append(", ");
+		sb.append(getRawPacketHeader());
+		
+		return sb.toString();
 	}
 }

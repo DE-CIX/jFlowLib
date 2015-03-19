@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.decix.jsflow.header.HeaderBytesException;
-import net.decix.jsflow.header.HeaderParseException;
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 
 /**
@@ -157,6 +157,7 @@ public class MessageHeader implements IPFIXEntity {
 	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
+		sb.append("[MessageHeader]: ");
 		sb.append("Version Number: ");
 		sb.append(versionNumber);
 		sb.append("\n");

@@ -11,6 +11,9 @@
  */
 package net.decix.jsflow.header;
 
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
+
 
 public class CounterData {
 	byte[] data;

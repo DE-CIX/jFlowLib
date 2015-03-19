@@ -11,6 +11,8 @@
  */
 package net.decix.jsflow.header;
 
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 
 public class EthernetInterfaceCounterHeader {
@@ -254,20 +256,34 @@ public class EthernetInterfaceCounterHeader {
 		}
 	}
 	
-	public String toString(){
-		String retVal = "\n[EthernetInterfaceCounterHeader]"+ "\n\tAlignmentErrors=" + this.getDot3StatsAlignmentErrors()
-																+ "\n\tFCSErrors=" + this.getDot3StatsFCSErrors()
-																+ "\n\tSingleCollisionFrames=" + this.getDot3StatsSingleCollisionFrames()
-																+ "\n\tMultipleCollisionFrames=" + this.getDot3StatsMultipleCollisionFrames()
-																+ "\n\tSQETestErrors=" + this.getDot3StatsSQETestErrors()
-																+ "\n\tDeferredTransmissions=" + this.getDot3StatsDeferredTransmissions()
-																+ "\n\tLateCollisions=" + this.getDot3StatsLateCollisions()
-																+ "\n\tExcessiveCollisions=" + this.getDot3StatsExcessiveCollisions()
-																+ "\n\tInternalMACTransmitErrors=" + this.getDot3StatsInternalMacTransmitErrors()
-																+ "\n\tCarrierSenseErrors=" + this.getDot3StatsCarrierSenseErrors()
-																+ "\n\tFrameTooLongs=" + this.getDot3StatsFrameTooLongs()
-																+ "\n\tInternalMACReceiveErrors=" + this.getDot3StatsInternalMacReceiveErrors()
-																+ "\n\tSymbolErrors=" + this.getDot3StatsSymbolErrors();
-		return retVal;
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[EthernetInterfaceCounterHeader]:");
+		sb.append("AlignmentErrors: ");
+		sb.append(getDot3StatsAlignmentErrors());
+		sb.append(", FCSErrors: " + this.getDot3StatsFCSErrors());
+		sb.append(", SingleCollisionFrames: ");
+		sb.append(getDot3StatsSingleCollisionFrames());
+		sb.append(", MultipleCollisionFrames: ");
+		sb.append(getDot3StatsMultipleCollisionFrames());
+		sb.append(", SQETestErrors: ");
+		sb.append(getDot3StatsSQETestErrors());
+		sb.append(", DeferredTransmissions: ");
+		sb.append(getDot3StatsDeferredTransmissions());
+		sb.append(", LateCollisions: ");
+		sb.append(getDot3StatsLateCollisions());
+		sb.append(", ExcessiveCollisions: ");
+		sb.append(getDot3StatsExcessiveCollisions());
+		sb.append(", InternalMACTransmitErrors: ");
+		sb.append(getDot3StatsInternalMacTransmitErrors());
+		sb.append(", CarrierSenseErrors: ");
+		sb.append(getDot3StatsCarrierSenseErrors());
+		sb.append(", FrameTooLongs: ");
+		sb.append(getDot3StatsFrameTooLongs());
+		sb.append(", InternalMACReceiveErrors: ");
+		sb.append(getDot3StatsInternalMacReceiveErrors());
+		sb.append(", SymbolErrors: ");
+		sb.append(getDot3StatsSymbolErrors());
+		return sb.toString();
 	}
 }

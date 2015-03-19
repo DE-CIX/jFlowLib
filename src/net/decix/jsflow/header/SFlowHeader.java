@@ -14,6 +14,9 @@ package net.decix.jsflow.header;
 import java.util.Vector;
 
 import net.decix.util.Address;
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.MacAddress;
 import net.decix.util.Utility;
 
