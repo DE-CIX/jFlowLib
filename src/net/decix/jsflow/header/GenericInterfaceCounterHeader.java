@@ -347,26 +347,48 @@ public class GenericInterfaceCounterHeader {
 		}
 	}
 
-	public String toString(){
-		String retVal = "\n[GenericInterfaceCounterHeader]" + "\n\tIndex=" + this.getIfIndex()
-																+ "\n\tType=" + this.getIfType()
-																+ "\n\tSpeed=" + this.getIfSpeed()
-																+ "\n\tDirection=" + this.getIfDirection()
-																+ "\n\tStatus=" + this.getIfStatus()
-																+ "\n\tOctets(IN)=" + this.getIfInOctets()
-																+ "\n\tUnicast(IN)=" + this.getIfInUcastPkts()
-																+ "\n\tMulticast(IN)=" + this.getIfInMulticastPkts()
-																+ "\n\tBroadcast(IN)=" + this.getIfInBroadcastPkts()
-																+ "\n\tDiscards(IN)=" + this.getIfInDiscards()
-																+ "\n\tErrors(IN)=" + this.getIfInErrors()
-																+ "\n\tUnknownProtocol(IN)=" + this.getIfInUnknownProtos()
-																+ "\n\tOctets(OUT)=" + this.getIfOutOctets()
-																+ "\n\tUnicast(OUT)=" + this.getIfOutUcastPkts()
-																+ "\n\tMulticast(OUT)=" + this.getIfOutMulticastPkts()
-																+ "\n\tBroadcast(OUT)=" + this.getIfOutBroadcastPkts()
-																+ "\n\tDiscards(OUT)=" + this.getIfOutDiscards()
-																+ "\n\tErrors(OUT)=" + this.getIfOutErrors()
-																+ "\n\tPromiscuousMode=" + this.getIfPromiscuousMode();
-		return retVal;
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[GenericInterfaceCounterHeader]: ");
+		sb.append("Index: ");
+		sb.append(getIfIndex());
+		sb.append(", Type: ");
+		sb.append(getIfType());
+		sb.append(", Speed: ");
+		sb.append(getIfSpeed());
+		sb.append(", Direction: ");
+		sb.append(getIfDirection());
+		sb.append(", Status: ");
+		sb.append(getIfStatus());
+		sb.append(", Octets(IN): ");
+		sb.append(getIfInOctets());
+		sb.append(", Unicast(IN): ");
+		sb.append(getIfInUcastPkts());
+		sb.append(", Multicast(IN): ");
+		sb.append(getIfInMulticastPkts());
+		sb.append(", Broadcast(IN): ");
+		sb.append(getIfInBroadcastPkts());
+		sb.append(", Discards(IN): ");
+		sb.append(getIfInDiscards());
+		sb.append(", Errors(IN): ");
+		sb.append(getIfInErrors());
+		sb.append(", tUnknownProtocol(IN): ");
+		sb.append(getIfInUnknownProtos());
+		sb.append(", Octets(OUT): ");
+		sb.append(getIfOutOctets());
+		sb.append(", Unicast(OUT): ");
+		sb.append(getIfOutUcastPkts());
+		sb.append(", Multicast(OUT): ");
+		sb.append(getIfOutMulticastPkts());
+		sb.append(", Broadcast(OUT): ");
+		sb.append(getIfOutBroadcastPkts());
+		sb.append(", Discards(OUT): ");
+		sb.append(getIfOutDiscards());
+		sb.append(", Errors(OUT): ");
+		sb.append(getIfOutErrors());
+		sb.append(", PromiscuousMode: ");
+		sb.append(getIfPromiscuousMode());
+		
+		return sb.toString();
 	}
 }

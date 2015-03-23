@@ -239,21 +239,36 @@ public class ExpandedFlowSampleHeader {
 		}
 	}
 	
-	public String toString(){
-		String retVal = "\n[ExpandedFlowSampleHeader]" + "\n\tSequenceNumber=" + this.getSequenceNumber()
-													 + "\n\tSourceIDtype=" + this.getSourceIDType()
-													 + "\n\tSourceIDindex=" + this.getSourceIDIndex()
-													 + "\n\tSamplingRate=" + this.getSamplingRate()
-													 + "\n\tSamplePool=" + this.getSamplePool()
-													 + "\n\tDrops=" + this.getDrops()
-													 + "\n\tInputInterfaceFormat=" + this.getInputInterfaceFormat()
-													 + "\n\tInputInterfaceValue=" + this.getInputInterfaceValue()
-													 + "\n\tOutputInterfaceFormat=" + this.getOutputInterfaceFormat()
-													 + "\n\tOutputInterfaceValue=" + this.getOutputInterfaceValue()
-													 + "\n\tFlowRecords(" + this.getNumberFlowRecords() + ")";
-		for(FlowRecordHeader frh : flowRecords){
-			retVal += frh;
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[ExpandedFlowSampleHeader]: ");
+		sb.append("SequenceNumber: ");
+		sb.append(getSequenceNumber());
+		sb.append(", SourceIDtype: ");
+		sb.append(getSourceIDType());
+		sb.append(", SourceIDindex: ");
+		sb.append(getSourceIDIndex());
+		sb.append(", SamplingRate: ");
+		sb.append(getSamplingRate());
+		sb.append(", SamplePool: ");
+		sb.append(getSamplePool());
+		sb.append(", Drops: ");
+		sb.append(getDrops());
+		sb.append(", InputInterfaceFormat: ");
+		sb.append(getInputInterfaceFormat());
+		sb.append(", InputInterfaceValue: ");
+		sb.append(getInputInterfaceValue());
+		sb.append(", OutputInterfaceFormat: ");
+		sb.append(getOutputInterfaceFormat());
+		sb.append(", OutputInterfaceValue: ");
+		sb.append(getOutputInterfaceValue());
+		sb.append(", FlowRecords: ");
+		sb.append(getNumberFlowRecords());
+		for (FlowRecordHeader frh : flowRecords) {
+			sb.append(frh);
+			sb.append(" ");
 		}
-		return retVal;
+		
+		return sb.toString();
 	}
 }

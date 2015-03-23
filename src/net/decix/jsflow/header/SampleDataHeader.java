@@ -127,15 +127,20 @@ public class SampleDataHeader {
 	}
 	
 	public String toString(){
-		String retVal = "\n[SampleHeader]" 	+ "\n\tFormat=" + this.sampleDataFormat 
-											+ "\n\tLength=" + this.sampleLength;
-		if(this.getSampleDataFormat() == EXPANDEDCOUNTERSAMPLE){
-			retVal += expandedCounterSampleHeader;
-		}else if(this.getSampleDataFormat() == EXPANDEDFLOWSAMPLE){
-			retVal += expandedFlowSampleHeader;
-		}else{
-			retVal += "SampleFormat yet unsupported.";
+		StringBuilder sb = new StringBuilder();
+		sb.append("[SampleHeader]: ");
+		sb.append(", Format: ");
+		sb.append(sampleDataFormat);
+		sb.append(", Length: ");
+		sb.append(sampleLength);
+		sb.append(", ");
+		if (this.getSampleDataFormat() == EXPANDEDCOUNTERSAMPLE) {
+			sb.append(expandedCounterSampleHeader);
+		} else if (this.getSampleDataFormat() == EXPANDEDFLOWSAMPLE) {
+			sb.append(expandedFlowSampleHeader);
+		} else {
+			sb.append("SampleFormat yet unsupported");
 		}
-		return retVal;
+		return sb.toString();
 	}
 }

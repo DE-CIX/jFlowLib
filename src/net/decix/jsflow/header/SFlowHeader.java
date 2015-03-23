@@ -194,17 +194,28 @@ public class SFlowHeader {
 		}
 	}
 	
-	public String toString(){
-		String retVal = "[SflowHeader]" + "\n\tVersion=" + this.getVersion()
-										+ "\n\tIPAgentVersion=" + this.getIPVersionAgent()
-										+ "\n\tIPAdressOfAgent=" + this.getAddressAgent()
-										+ "\n\tSubAgentID=" + this.getSubAgentID()
-										+ "\n\tDatagramSequenceNumber=" + this.getSeqNumber()
-										+ "\n\tSwitchUptime=" + this.getSysUptime()
-										+ "\n\tSamples(" + this.getNumberSample() + ")";
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[SFlowHeader]: ");
+		sb.append("Version: ");
+		sb.append(getVersion());
+		sb.append(", IPAgentVersion: ");
+		sb.append(getIPVersionAgent());
+		sb.append(", IPAdressOfAgent: ");
+		sb.append(getAddressAgent());
+		sb.append(", SubAgentID: ");
+		sb.append(getSubAgentID());
+		sb.append(", DatagramSequenceNumber: ");
+		sb.append(getSeqNumber());
+		sb.append(", SwitchUptime: ");
+		sb.append(getSysUptime());
+		sb.append(", Samples: ");
+		sb.append(getNumberSample());
+		sb.append(", ");
 		for(SampleDataHeader sdh : sampleDataHeaders){
-			retVal += sdh;
+			sb.append(sdh);
+			sb.append(" ");
 		}
-		return retVal;
+		return sb.toString();
 	}
 }

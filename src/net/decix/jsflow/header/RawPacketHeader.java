@@ -137,13 +137,21 @@ public class RawPacketHeader {
 		}
 	}
 	
-	public String toString(){
-		String retVal = "\n[RawPacketheader]" + "\n\tHeaderProtocol=" + this.getHeaderProtocol()
-											+ "\n\tFrameLength=" + this.getFrameLength()
-											+ "\n\tStrippedBytes=" + this.getStripped()
-											+ "\n\tHeaderSize=" + this.getHeaderSize();
-		retVal += macHeader;
-		return retVal;
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[RawPacketheader]: ");
+		sb.append(", HeaderProtocol: ");
+		sb.append(getHeaderProtocol());
+		sb.append(", FrameLength: ");
+		sb.append(getFrameLength());
+		sb.append(", StrippedBytes: ");
+		sb.append(getStripped());
+		sb.append(", HeaderSize: ");
+		sb.append(getHeaderSize());
+		sb.append(", ");
+		sb.append(macHeader);
+		
+		return sb.toString();
 	}
 }
 

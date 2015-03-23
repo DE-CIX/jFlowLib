@@ -98,11 +98,19 @@ public class MacHeader {
 		}
 	}
 
-	public String toString(){
-		String retVal = "\n[MacHeader]" + "\n\tDestination=" + this.getDestination()
-										+ "\n\tSource=" + this.getSource()
-										+ "\n\tType=" + this.getType()
-										+ "\n\tOFFCUT(" + this.offcut.length + ")";
-		return retVal;
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("[MacHeader]: ");
+		sb.append(", Destination: ");
+		sb.append(getDestination());
+		sb.append(", Source: ");
+		sb.append(getSource());
+		sb.append(", Type: ");
+		sb.append(getType());
+		sb.append(", OFFCUT: ");
+		sb.append(offcut.length);
+		
+		return sb.toString();
 	}
 }

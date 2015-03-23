@@ -79,13 +79,15 @@ public class TaggedMacHeader extends MacHeader {
 		}
 	}
 	
-	public String toString(){
-		String retVal = "\n[MacHeader]" + "\n\tDestination=" + this.getDestination()
-										+ "\n\tSource=" + this.getSource()
-										+ "\n\tTPID(VLAN)=" + this.getTpid()
-										+ "\n\tTCI(VLAN)=" + this.getTCI()
-										+ "\n\tType=" + this.getType()
-										+ "\n\tOFFCUT(" + this.offcut.length + ")";
-		return retVal;
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[TaggedMacHeader]: ");
+		sb.append(super.toString());
+		sb.append(", TPID(VLAN): ");
+		sb.append(getTpid());
+		sb.append(", TCI(VLAN): ");
+		sb.append(getTCI());
+		
+		return sb.toString();
 	}
 }
