@@ -8,6 +8,8 @@ import net.decix.jipfix.header.DataRecord;
 import net.decix.jipfix.header.L2IPDataRecord;
 import net.decix.jipfix.header.MessageHeader;
 import net.decix.jipfix.header.SetHeader;
+import net.decix.randomizer.IPv4AddressRandomizer;
+import net.decix.randomizer.IPv6AddressRandomizer;
 import net.decix.util.HeaderBytesException;
 import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
@@ -24,7 +26,7 @@ import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.UdpPacket;
 import org.pcap4j.packet.UnknownPacket;
 
-public class PCAPAnonyminizer {
+public class PCAPIPRandomizer {
 	private static final String PCAP_FILE_READ = "c:\\tmp\\ipfix-2014-04-16.1.pcap";
 	private static final String PCAP_FILE_WRITE = "c:\\tmp\\trace_out_ipfix-2014-04-16.1.pcap";
 
@@ -65,16 +67,16 @@ public class PCAPAnonyminizer {
 								boolean foundIPv4 = false;
 								if (currentDataRecord instanceof L2IPDataRecord) {
 									L2IPDataRecord l2IPDataRecord = (L2IPDataRecord) currentDataRecord;
-									if (!Utility.isConfigured(l2IPDataRecord.getDestinationIPv6Address())) {
+									if (Utility.isConfigured(l2IPDataRecord.getDestinationIPv6Address())) {
 										foundIPv6 = true;
 									}
-									if (!Utility.isConfigured(l2IPDataRecord.getSourceIPv6Address())) {
+									if (Utility.isConfigured(l2IPDataRecord.getSourceIPv6Address())) {
 										foundIPv6 = true;
 									}
-									if (!Utility.isConfigured(l2IPDataRecord.getDestinationIPv4Address())) {
+									if (Utility.isConfigured(l2IPDataRecord.getDestinationIPv4Address())) {
 										foundIPv4 = true;
 									}
-									if (!Utility.isConfigured(l2IPDataRecord.getSourceIPv4Address())) {
+									if (Utility.isConfigured(l2IPDataRecord.getSourceIPv4Address())) {
 										foundIPv4 = true;
 									}
 									Inet4Address realDestinationIpv4 = l2IPDataRecord.getDestinationIPv4Address();
@@ -98,7 +100,6 @@ public class PCAPAnonyminizer {
 									}
 
 									if (foundIPv6) {
-
 										fakeSourceIpv6 = (Inet6Address) ipV6randomizer.randomize(realSourceIpv6);
 										fakeDestinationIpv6 = (Inet6Address) ipV6randomizer.randomize(realDestinationIpv6);
 

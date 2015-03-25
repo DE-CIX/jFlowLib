@@ -1,4 +1,4 @@
-package net.decix.jipfix.randomizer;
+package net.decix.randomizer;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
