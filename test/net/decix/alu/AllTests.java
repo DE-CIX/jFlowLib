@@ -13,8 +13,6 @@ package net.decix.alu;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import net.decix.jsflow.util.AddressTest;
-import net.decix.jsflow.util.UtilityTest;
 
 public class AllTests {
 

@@ -9,7 +9,7 @@
  * This software is licensed under the Apache License, version 2.0. A copy of 
  * the license agreement is included in this distribution.
  */
-package net.decix.jsflow.util;
+package net.decix.util;
 
 import net.decix.util.Address;
 import net.decix.util.MacAddress;

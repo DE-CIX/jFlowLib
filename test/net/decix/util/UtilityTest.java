@@ -9,11 +9,13 @@
  * This software is licensed under the Apache License, version 2.0. A copy of 
  * the license agreement is included in this distribution.
  */
-package net.decix.jsflow.util;
+package net.decix.util;
 
 import java.math.BigInteger;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.UnknownHostException;
 
-import net.decix.util.Utility;
 import junit.framework.TestCase;
 
 public class UtilityTest extends TestCase {
@@ -66,5 +68,15 @@ public class UtilityTest extends TestCase {
 		for (int i = 0; i < Math.min(test.length, bInt.bitLength()); i++) {
 			assertEquals(test[i], val[i]);
 		}
+	}
+	
+	public void testIsConfiguredIPv4() throws UnknownHostException {
+		assertTrue(Utility.isConfigured((Inet4Address) Inet4Address.getByName("172.20.111.21")));
+		assertFalse(Utility.isConfigured((Inet4Address) Inet4Address.getByName("0.0.0.0")));
+	}
+	
+	public void testIsConfiguredIPv6() throws UnknownHostException {
+		assertTrue(Utility.isConfigured((Inet6Address) Inet6Address.getByName("2a02:26f0:64:0:0:0:170e:5c09")));
+		assertFalse(Utility.isConfigured((Inet6Address) Inet6Address.getByName("0:0:0:0:0:0:0:0")));
 	}
 }

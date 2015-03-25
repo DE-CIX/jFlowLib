@@ -1,4 +1,4 @@
-package net.decix.jsflow.util;
+package net.decix.util;
 
 import java.io.BufferedReader;
 import java.io.File;

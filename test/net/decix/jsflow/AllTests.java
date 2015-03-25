@@ -13,15 +13,13 @@ package net.decix.jsflow;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import net.decix.jsflow.util.AddressTest;
-import net.decix.jsflow.util.UtilityTest;
+import net.decix.util.AddressTest;
+import net.decix.util.UtilityTest;
 
 public class AllTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for net.decix.jsflow");
-		suite.addTestSuite(AddressTest.class);
-		suite.addTestSuite(UtilityTest.class);
 		suite.addTestSuite(SflowHeaderTest.class);
 		suite.addTestSuite(SampleDataHeaderTest.class);
 		suite.addTestSuite(ExpandedCounterSampleHeaderTest.class);
