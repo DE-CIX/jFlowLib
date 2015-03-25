@@ -20,14 +20,14 @@ public abstract class IPAddressRadomizer {
 		if (staticRandomization == false) {
 			return ipAddressRandomizer(realAddress);
 		} else {
-			InetAddress fakeAdress = ipDatabase.get(realAddress);
-			if (fakeAdress != null) {
-				return fakeAdress;
+			InetAddress fakeAddress = ipDatabase.get(realAddress);
+			if (fakeAddress != null) {
+				return fakeAddress;
 			} else {
-				fakeAdress = ipAddressRandomizer(realAddress);
-				ipDatabase.put(realAddress, fakeAdress);
+				fakeAddress = ipAddressRandomizer(realAddress);
+				ipDatabase.put(realAddress, fakeAddress);
 				
-				return ipDatabase.get(realAddress);
+				return fakeAddress;
 			}
 		}
 	}
