@@ -4,27 +4,27 @@ import java.net.InetAddress;
 import java.util.HashMap;
 
 public abstract class IPAddressRadomizer {
-	HashMap <InetAddress, InetAddress> ipDatabase = new HashMap<InetAddress, InetAddress>();
+	private HashMap <InetAddress, InetAddress> ipDatabase = new HashMap<InetAddress, InetAddress>();
 	
 	private boolean staticRandomization = true;
 	
-	IPAddressRadomizer() {
+	public IPAddressRadomizer() {
 		this.staticRandomization = true;
 	}
 	
-	IPAddressRadomizer(boolean staticRandomization) {
+	public IPAddressRadomizer(boolean staticRandomization) {
 		this.staticRandomization = staticRandomization;
 	}
 	
 	public InetAddress randomize(InetAddress realAddress) {
 		if (staticRandomization == false) {
-			return ipAddressRandomizer();
+			return ipAddressRandomizer(realAddress);
 		} else {
 			InetAddress fakeAdress = ipDatabase.get(realAddress);
 			if (fakeAdress != null) {
 				return fakeAdress;
 			} else {
-				fakeAdress = ipAddressRandomizer();
+				fakeAdress = ipAddressRandomizer(realAddress);
 				ipDatabase.put(realAddress, fakeAdress);
 				
 				return ipDatabase.get(realAddress);
@@ -36,7 +36,7 @@ public abstract class IPAddressRadomizer {
 		return ipDatabase.size();
 	}
 	
-	protected abstract InetAddress ipAddressRandomizer();
+	protected abstract InetAddress ipAddressRandomizer(InetAddress realAddress);
 }
 
 

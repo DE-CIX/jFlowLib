@@ -1,21 +1,22 @@
 package net.decix.jipfix.randomizer;
 
-
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Random;
 
 public class IPv6AddressRandomizer extends IPAddressRadomizer {
 
-	public InetAddress ipAddressRandomizer() {
-		int block1 = ((int) (Math.random() * 60000));
-		int block2 = ((int) (Math.random() * 60000));
-		int block3 = ((int) (Math.random() * 60000));
-		int block4 = ((int) (Math.random() * 60000));
-		int block5 = ((int) (Math.random() * 60000));
-		int block6 = ((int) (Math.random() * 60000));
-		int block7 = ((int) (Math.random() * 60000));
-		int block8 = ((int) (Math.random() * 60000));
+	public Inet6Address ipAddressRandomizer(InetAddress realAddress) {
+		Random rand = new Random();
+		int block1 = rand.nextInt(65535);
+		int block2 = rand.nextInt(65535);
+		int block3 = rand.nextInt(65535);
+		int block4 = rand.nextInt(65535);
+		int block5 = rand.nextInt(65535);
+		int block6 = rand.nextInt(65535);
+		int block7 = rand.nextInt(65535);
+		int block8 = rand.nextInt(65535);
 		
 		Inet6Address fakeV6 = null;
 		try {

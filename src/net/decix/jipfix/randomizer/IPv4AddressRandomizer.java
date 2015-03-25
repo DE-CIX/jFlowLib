@@ -3,18 +3,17 @@ package net.decix.jipfix.randomizer;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Random;
 
 public class IPv4AddressRandomizer extends IPAddressRadomizer {
 	
 	@Override
-	protected InetAddress ipAddressRandomizer() {
-		int first = ((int) (Math.random() * 140)) + 11;
-		if (first == 127) { 
-			first = 100;
-		}
-		int second = ((int) (Math.random() * 240)) + 1;
-		int third = ((int) (Math.random() * 240)) + 1;
-		int fourth = ((int) (Math.random() * 240)) + 1;
+	protected Inet4Address ipAddressRandomizer(InetAddress realAddress) {
+		Random rand = new Random();
+		int first = rand.nextInt(256);
+		int second = rand.nextInt(256);
+		int third = rand.nextInt(256);
+		int fourth = rand.nextInt(256);
 		
 		Inet4Address fakeV4 = null;
 		try {
