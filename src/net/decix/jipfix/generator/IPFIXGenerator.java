@@ -40,23 +40,23 @@ import com.savarese.rocksaw.net.RawSocket;
 
 public class IPFIXGenerator {
 	public static void main(String args[]) {
-		Option ingressPhysicalInterfaceID = OptionBuilder.withArgName("ID").hasArgs().withDescription("ingress physical interface identifier").create("ingressPhysicalInterfaceID");
-		Option egressPhysicalInterfaceID = OptionBuilder.withArgName("ID").hasArgs().withDescription("egress physical interface identifer").create("egressPhysicalInterfaceID");
+		Option ingressPhysicalInterfaceID = OptionBuilder.withArgName("id").hasArgs().withDescription("ingress physical interface identifier").create("ingressPhysicalInterfaceID");
+		Option egressPhysicalInterfaceID = OptionBuilder.withArgName("id").hasArgs().withDescription("egress physical interface identifer").create("egressPhysicalInterfaceID");
 		
-		Option innerVLAN = OptionBuilder.withArgName("VLAN").hasArgs().withDescription("inner VLAN").create("innerVLAN");
-		Option outerVLAN = OptionBuilder.withArgName("VLAN").hasArgs().withDescription("outer VLAN").create("outerVLAN");
+		Option innerVLAN = OptionBuilder.withArgName("vlan").hasArgs().withDescription("inner VLAN").create("innerVLAN");
+		Option outerVLAN = OptionBuilder.withArgName("vlan").hasArgs().withDescription("outer VLAN").create("outerVLAN");
 		
-		Option srcMAC = OptionBuilder.withArgName("MAC").hasArgs().withDescription("source MAC address").create("srcMAC");
-		Option destMAC = OptionBuilder.withArgName("MAC").hasArgs().withDescription("destination MAC address").create("destMAC");
+		Option srcMAC = OptionBuilder.withArgName("mac").hasArgs().withDescription("source MAC address").create("srcMAC");
+		Option destMAC = OptionBuilder.withArgName("mac").hasArgs().withDescription("destination MAC address").create("destMAC");
 		
 		Option ipVersion = OptionBuilder.withArgName("version").hasArgs().withDescription("IP version").create("ipVersion");
 		Option transportProtocol = OptionBuilder.withArgName("protocol").hasArgs().withDescription("transport layer protocol").create("transportProtocol");
 		
-		Option srcIPv4 = OptionBuilder.withArgName("IPv4").hasArgs().withDescription("source IPv4 address").create("srcIPv4");
-		Option destIPv4 = OptionBuilder.withArgName("IPv4").hasArgs().withDescription("destination IPv4 address").create("destIPv4");
+		Option srcIPv4 = OptionBuilder.withArgName("ipv4").hasArgs().withDescription("source IPv4 address").create("srcIPv4");
+		Option destIPv4 = OptionBuilder.withArgName("ipv4").hasArgs().withDescription("destination IPv4 address").create("destIPv4");
 		
-		Option srcIPv6 = OptionBuilder.withArgName("IPv6").hasArgs().withDescription("source IPv6 address").create("srcIPv6");
-		Option destIPv6 = OptionBuilder.withArgName("IPv6").hasArgs().withDescription("destination IPv6 address").create("destIPv6");
+		Option srcIPv6 = OptionBuilder.withArgName("ipv6").hasArgs().withDescription("source IPv6 address").create("srcIPv6");
+		Option destIPv6 = OptionBuilder.withArgName("ipv6").hasArgs().withDescription("destination IPv6 address").create("destIPv6");
 		
 		Option srcPort = OptionBuilder.withArgName("port").hasArgs().withDescription("source port").create("srcPort");
 		Option destPort = OptionBuilder.withArgName("port").hasArgs().withDescription("destination port").create("destPort");
@@ -68,10 +68,10 @@ public class IPFIXGenerator {
 		
 		Option dataRate = OptionBuilder.withArgName("rate").hasArgs().withDescription("data rate in MBit/s (default: 1 MBit/s)").create("dataRate");
 		Option samplingRate = OptionBuilder.withArgName("rate").hasArgs().withDescription("sampling rate (default: 10000)").create("samplingRate");
-		Option collectorIPv4 = OptionBuilder.withArgName("IP").hasArgs().withDescription("IPFIX collector IPv4 address (required)").create("collectorIP");
+		Option collectorIPv4 = OptionBuilder.withArgName("ipv4").hasArgs().withDescription("IPFIX collector IPv4 address (required)").create("collectorIPv4");
 		Option collectorPort = OptionBuilder.withArgName("port").hasArgs().withDescription("IPFIX collector UDP port (default: 2601)").create("collectorPort");
 
-		Option exporterIPv4 = OptionBuilder.withArgName("IPv4").hasArgs().withDescription("IPFIX exporter (spoofed) IPv4 address").create("exporterIP");
+		Option exporterIPv4 = OptionBuilder.withArgName("ipv4").hasArgs().withDescription("IPFIX exporter (spoofed) IPv4 address").create("exporterIPv4");
 		Option exporterPort = OptionBuilder.withArgName("port").hasArgs().withDescription("IPFIX exporter UDP port (default: 2601)").create("exporterPort");
 		
 		Option debug = OptionBuilder.withArgName("debug").withDescription("enable debug").create("debug");
@@ -107,7 +107,7 @@ public class IPFIXGenerator {
 		try {
 			CommandLine line = parser.parse(options, args);
 			
-			if (!line.hasOption("collectorIP")) {
+			if (!line.hasOption("collectorIPv4")) {
 				HelpFormatter formatter = new HelpFormatter();
 				formatter.printHelp( "IPFIXGenerator", options );
 				System.exit(0);
@@ -237,8 +237,8 @@ public class IPFIXGenerator {
 			
 			// collector IP and port
 			InetAddress collectorIPv4Value = null;
-			if (line.hasOption("collectorIP")) {
-				collectorIPv4Value = InetAddress.getByName(line.getOptionValue("collectorIP"));
+			if (line.hasOption("collectorIPv4")) {
+				collectorIPv4Value = InetAddress.getByName(line.getOptionValue("collectorIPv4"));
 			}
 			
 			int collectorPortValue = 2601;
@@ -248,8 +248,8 @@ public class IPFIXGenerator {
 			
 			// exporter IP and port
 			InetAddress exporterIPv4Value = null;
-			if (line.hasOption("exporterIP")) {
-				collectorIPv4Value = InetAddress.getByName(line.getOptionValue("exporterIP"));
+			if (line.hasOption("exporterIPv4")) {
+				exporterIPv4Value = InetAddress.getByName(line.getOptionValue("exporterIPv4"));
 			}
 
 			int exporterPortValue = 2601;
