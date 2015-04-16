@@ -225,8 +225,8 @@ public class IPFIXGenerator {
 			
 			// data rate
 			int dataRateValue = 1; // 1 MBit/s
-			if (line.hasOption("dataRateValue")) {
-				dataRateValue = Integer.parseInt(line.getOptionValue("dataRateValue"));
+			if (line.hasOption("dataRate")) {
+				dataRateValue = Integer.parseInt(line.getOptionValue("dataRate"));
 			}
 			
 			// sampling rate
