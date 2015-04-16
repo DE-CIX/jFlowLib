@@ -4,10 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
 
+import net.decix.jsflow.header.CounterRecordHeader;
 import net.decix.jsflow.header.ExpandedCounterSampleHeader;
-import net.decix.jsflow.header.HeaderParseException;
-import net.decix.jsflow.header.SampleDataHeader;
 import net.decix.jsflow.header.SFlowHeader;
+import net.decix.jsflow.header.SampleDataHeader;
+import net.decix.util.HeaderParseException;
 import net.decix.util.MacAddress;
 
 import org.pcap4j.core.NotOpenException;
@@ -55,13 +56,17 @@ public class SFlowPCAPParser {
 				try {
 					SFlowHeader rph = SFlowHeader.parse(onlySFLOW);
 					
-					
-					
 					Vector<SampleDataHeader> sampleDataHeaders = rph.getSampleDataHeaders();
 					for (SampleDataHeader sdh : sampleDataHeaders) {
 						ExpandedCounterSampleHeader expandedCounterSampleHeader = sdh.getExpandedCounterSampleHeader();
-						if (expandedCounterSampleHeader.getSourceIDIndex() == 1610907960) {
-							System.out.println(rph);
+//						System.out.println(expandedCounterSampleHeader.getSourceIDIndex());
+//						System.out.println(expandedCounterSampleHeader.getSourceIDType());
+						for (CounterRecordHeader gich : expandedCounterSampleHeader.getCounterRecords()) {
+							if (gich.getGenericInterfaceCounterHeader() != null) {
+								System.out.println("seq: " + expandedCounterSampleHeader.getSequenceNumber());
+								System.out.println("if index:" + gich.getGenericInterfaceCounterHeader().getIfIndex());
+								System.out.println("if type:" + gich.getGenericInterfaceCounterHeader().getIfType());
+							}
 						}
 					}
 					

@@ -139,7 +139,12 @@ public class OptionTemplateRecord extends Record {
 		sb.append(", Information elements: ");
 		sb.append(informationElements);
 		sb.append(", Scope Information elements: ");
-		sb.append(scopeInformationElements);
+		sb.append(scopeInformationElements.size());
+		sb.append(", ");
+		for (InformationElement ie : informationElements) {
+			sb.append(ie);
+			sb.append(", ");
+		}
 		
 		return sb.toString();
 	}

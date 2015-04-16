@@ -98,8 +98,13 @@ public class TemplateRecord extends Record {
 		sb.append(templateID);
 		sb.append(", Field count: ");
 		sb.append(fieldCount);
-		sb.append("Information elements: ");
-		sb.append(informationElements);
+		sb.append(", Information elements: ");	
+		sb.append(informationElements.size());
+		sb.append(", ");
+		for (InformationElement ie : informationElements) {
+			sb.append(ie);
+			sb.append(", ");
+		}
 		
 		return sb.toString();
 	}

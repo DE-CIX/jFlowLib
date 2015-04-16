@@ -3,6 +3,8 @@ package net.decix.jipfix.header;
 import java.math.BigInteger;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import net.decix.util.HeaderBytesException;
 import net.decix.util.HeaderParseException;
@@ -38,6 +40,19 @@ public class L2IPDataRecord extends DataRecord {
 	private short ipClassOfService;
 	private short ipVersion;
 	private int icmpTypeCodeIPv4;
+	
+	public L2IPDataRecord() throws UnknownHostException {
+		sourceMacAddress = new MacAddress();
+		destinationMacAddress = new MacAddress();
+		
+		byte[] addrIPv4 = new byte[4];
+		sourceIPv4Address = (Inet4Address) InetAddress.getByAddress(addrIPv4);
+		destinationIPv4Address = (Inet4Address) InetAddress.getByAddress(addrIPv4);
+		
+		byte[] addrIPv6 = new byte[16];
+		sourceIPv6Address = (Inet6Address) InetAddress.getByAddress(addrIPv6);
+		destinationIPv6Address = (Inet6Address) InetAddress.getByAddress(addrIPv6);
+	}
 		
 	public MacAddress getSourceMacAddress() {
 		return sourceMacAddress;

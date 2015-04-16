@@ -57,4 +57,17 @@ public class InformationElement implements IPFIXEntity {
 			throw new HeaderBytesException("Error while generating the bytes: " + e.getMessage());
 		}
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[InformationElement]: ");
+		sb.append("ID: ");
+		sb.append(informationElementID);
+		sb.append(", ");
+		sb.append("Field length: ");
+		sb.append(fieldLength);
+		
+		return sb.toString();
+	}
 }

@@ -20,7 +20,7 @@
 <jsflow-muxer>
   <listen>
     <ip>10.102.200.5</ip>
-    <port>2055</port>
+    <port>2056</port>
   </listen>
   <ping>
     <collectors>true</collectors>
@@ -29,7 +29,7 @@
   <muxer type="plain"> 
     <collector>
       <ip>192.168.63.19</ip>
-      <port>2055</port>
+      <port>2056</port>
     </collector> 
   </muxer>
 </jsflow-muxer>

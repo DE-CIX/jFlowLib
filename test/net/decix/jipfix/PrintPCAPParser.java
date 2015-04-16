@@ -4,8 +4,8 @@ import net.decix.jipfix.header.DataRecord;
 import net.decix.jipfix.header.L2IPDataRecord;
 import net.decix.jipfix.header.MessageHeader;
 import net.decix.jipfix.header.SetHeader;
-import net.decix.jsflow.header.HeaderBytesException;
-import net.decix.jsflow.header.HeaderParseException;
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 import net.decix.util.UtilityException;
 

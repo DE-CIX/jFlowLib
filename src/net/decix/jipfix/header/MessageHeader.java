@@ -160,25 +160,26 @@ public class MessageHeader implements IPFIXEntity {
 		sb.append("[MessageHeader]: ");
 		sb.append("Version Number: ");
 		sb.append(versionNumber);
-		sb.append("\n");
+		sb.append(", ");
 		sb.append("Length: ");
 		sb.append(length);
-		sb.append("\n");
+		sb.append(", ");
 		sb.append("Export time: ");
 		sb.append(exportTime);
-		sb.append("\n");
+		sb.append(", ");
 		sb.append("Sequence number: ");
 		sb.append(sequenceNumber);
-		sb.append("\n");
+		sb.append(", ");
 		sb.append("Observation Domain ID: ");
 		sb.append(observationDomainID);
-		sb.append("\n");
-		sb.append("SetHeaders: (" + setHeaders.size() + ")\n");
+		sb.append(", ");
+		sb.append("SetHeaders: ");
+		sb.append(setHeaders.size());
+		sb.append(", ");
 		for (SetHeader sh : setHeaders) {
 			sb.append(sh);
-			sb.append("\n");
+			sb.append(", ");
 		}
-		sb.append("\n");
 		return sb.toString();
 	}
 }

@@ -20,7 +20,10 @@ public class MacAddress {
 	private int fourthOctet;
 	private int fifthOctet;
 	private int sixthOctet;
-		
+	
+	public MacAddress() {
+	}
+	
 	public MacAddress(String address) throws UtilityException {
 		StringTokenizer st = new StringTokenizer(address, ":");
 		if (st.countTokens() != 6) {

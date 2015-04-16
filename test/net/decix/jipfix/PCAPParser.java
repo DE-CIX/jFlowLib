@@ -1,5 +1,7 @@
 package net.decix.jipfix;
 
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -7,8 +9,8 @@ import net.decix.jipfix.header.DataRecord;
 import net.decix.jipfix.header.L2IPDataRecord;
 import net.decix.jipfix.header.MessageHeader;
 import net.decix.jipfix.header.SetHeader;
-import net.decix.jsflow.header.HeaderBytesException;
-import net.decix.jsflow.header.HeaderParseException;
+import net.decix.util.HeaderBytesException;
+import net.decix.util.HeaderParseException;
 import net.decix.util.MacAddress;
 import net.decix.util.Utility;
 
@@ -27,10 +29,10 @@ import org.pcap4j.packet.UnknownPacket;
 public class PCAPParser {  
 //	private static final String PCAP_FILE_READ = "/Users/tking/Downloads/2014-03-05_IPFIX_capture01.pcap"; // IPFIX-Test.pcap
 //	private static final String PCAP_FILE_READ = "/Users/tking/Downloads/IPFIX-Test.pcap";
-	private static final String PCAP_FILE_READ = "c:\\tmp\\trace.pcap";
+	private static final String PCAP_FILE_READ = "/Users/tking/Downloads/ipfix-all-routers-2014-12-18.pcap";
 //	private static final String PCAP_FILE_READ = "/Users/tking/Downloads/ipfix-2014-04-14.2.pcap";
-//	private static final String PCAP_FILE_WRITE = "/Users/tking/Downloads/IPFIX-Test_Created_By_JIPFIX.pcap";
-	private static final String PCAP_FILE_WRITE = "c:\\tmp\\trace_out.pcap";
+	private static final String PCAP_FILE_WRITE = "/Users/tking/Downloads/IPFIX-Test_Created_By_JIPFIX.pcap";
+//	private static final String PCAP_FILE_WRITE = "c:\\tmp\\trace_out.pcap";
 //	private static final String PCAP_FILE_WRITE = "/Users/tking/Downloads/IPFIX-Test_Created_By_JIPFIX2.pcap";
 	
 //	private static PcapHandle handleWrite;
@@ -62,32 +64,32 @@ public class PCAPParser {
 				try {
 					MessageHeader mh = MessageHeader.parse(onlyIPFIX);
 										
-					Packet.Builder udpB = fullPacket.get(UdpPacket.class).getBuilder();
-					UnknownPacket.Builder upB = new UnknownPacket.Builder();
-					upB.rawData(mh.getBytes());
-					udpB.payloadBuilder(upB);
-
-					Packet.Builder ipB = fullPacket.get(IpV4Packet.class).getBuilder();
-					ipB.payloadBuilder(udpB);
-
-					Packet.Builder etherB = fullPacket.get(EthernetPacket.class).getBuilder();
-					etherB.payloadBuilder(ipB);
-
-					Packet newPacket = etherB.build();
-					dumper.dump(newPacket, 0l, 0);
+//					Packet.Builder udpB = fullPacket.get(UdpPacket.class).getBuilder();
+//					UnknownPacket.Builder upB = new UnknownPacket.Builder();
+//					upB.rawData(mh.getBytes());
+//					udpB.payloadBuilder(upB);
+//
+//					Packet.Builder ipB = fullPacket.get(IpV4Packet.class).getBuilder();
+//					ipB.payloadBuilder(udpB);
+//
+//					Packet.Builder etherB = fullPacket.get(EthernetPacket.class).getBuilder();
+//					etherB.payloadBuilder(ipB);
+//
+//					Packet newPacket = etherB.build();
+//					dumper.dump(newPacket, 0l, 0);
 					
 					if (onlyIPFIX.length != mh.getBytes().length) {
 						System.out.println("Lenght: OnlyIPFIX: " + onlyIPFIX.length + " : Generated: " + mh.getBytes().length);
 					}
 
-					boolean containsOtherThan306SetID = false;
-				 	for (SetHeader sh : mh.getSetHeaders()) {
-						if (sh.getSetID() != 306) containsOtherThan306SetID = true;
-					}
-					if (containsOtherThan306SetID) {
-						//System.out.printf("frame #%d%n", packet.getFrameNumber());
-						System.out.println("Template?");
-					} else {
+//					boolean containsOtherThan306SetID = false;
+//				 	for (SetHeader sh : mh.getSetHeaders()) {
+//						if (sh.getSetID() != 306) containsOtherThan306SetID = true;
+//					}
+//					if (containsOtherThan306SetID) {
+//						//System.out.printf("frame #%d%n", packet.getFrameNumber());
+//						System.out.println("Template?");
+//					} else {
 						//								Random r = new Random();
 						//								int i = r.nextInt(100);
 						//								if (i <= 0) {							
@@ -99,23 +101,29 @@ public class PCAPParser {
 							for (DataRecord dr : sh.getDataRecords()) {
 								if (dr instanceof L2IPDataRecord) {
 									L2IPDataRecord lidr = (L2IPDataRecord) dr;
-									srcMacAddresses.add(lidr.getSourceMacAddress());
-									destMacAddresses.add(lidr.getDestinationMacAddress());
-
-									if (Utility.isConfigured(lidr.getDestinationIPv6Address())) {
-										//												System.out.println(mh);			
+									if (lidr.getSourceIPv4Address().equals(Inet4Address.getByName("85.214.108.26")) || lidr.getSourceIPv4Address().equals(Inet4Address.getByName("85.214.108.26"))) {
+										System.out.println(lidr);
 									}
+//									srcMacAddresses.add(lidr.getSourceMacAddress());
+//									destMacAddresses.add(lidr.getDestinationMacAddress());
+
+//									if (Utility.isConfigured(lidr.getDestinationIPv6Address())) {
+//										//												System.out.println(mh);			
+//									}
 								}
 							}
 						}
-					}
+//					}
 				} catch (HeaderParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (HeaderBytesException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (NotOpenException e) {
+//				} catch (NotOpenException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+				} catch (UnknownHostException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

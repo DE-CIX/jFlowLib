@@ -186,7 +186,7 @@ public class SetHeader implements IPFIXEntity {
 	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[SetHeader]:");
+		sb.append("[SetHeader]: ");
 		sb.append("Set ID: ");
 		sb.append(setID);
 		sb.append(", Length: ");
@@ -205,7 +205,7 @@ public class SetHeader implements IPFIXEntity {
 			sb.append(record);
 			sb.append(", ");
 		}
-		sb.append("Option template records: (");
+		sb.append("Option template records: ");
 		sb.append(optionTemplateRecords.size());
 		sb.append(", ");
 		for (OptionTemplateRecord record : optionTemplateRecords) {
