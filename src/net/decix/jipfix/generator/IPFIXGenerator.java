@@ -47,7 +47,7 @@ public class IPFIXGenerator {
 		Option outerVLAN = OptionBuilder.withArgName("VLAN").hasArgs().withDescription("outer VLAN").create("outerVLAN");
 		
 		Option srcMAC = OptionBuilder.withArgName("MAC").hasArgs().withDescription("source MAC address").create("srcMAC");
-		Option destMAC = OptionBuilder.withArgName("tMAC").hasArgs().withDescription("destination MAC address").create("destMAC");
+		Option destMAC = OptionBuilder.withArgName("MAC").hasArgs().withDescription("destination MAC address").create("destMAC");
 		
 		Option ipVersion = OptionBuilder.withArgName("version").hasArgs().withDescription("IP version").create("ipVersion");
 		Option transportProtocol = OptionBuilder.withArgName("protocol").hasArgs().withDescription("transport layer protocol").create("transportProtocol");
@@ -61,6 +61,8 @@ public class IPFIXGenerator {
 		Option srcPort = OptionBuilder.withArgName("port").hasArgs().withDescription("source port").create("srcPort");
 		Option destPort = OptionBuilder.withArgName("port").hasArgs().withDescription("destination port").create("destPort");
 		
+		Option icmpType = OptionBuilder.withArgName("type").hasArgs().withDescription("ICMP type").create("icmpType");
+		
 		Option packets = OptionBuilder.withArgName("packets").hasArgs().withDescription("packets (default: 1)").create("packets");
 		Option octets = OptionBuilder.withArgName("octets").hasArgs().withDescription("octets in Bytes (default: 100000)").create("octets");
 		
@@ -69,7 +71,7 @@ public class IPFIXGenerator {
 		Option collectorIPv4 = OptionBuilder.withArgName("IP").hasArgs().withDescription("IPFIX collector IPv4 address (required)").create("collectorIP");
 		Option collectorPort = OptionBuilder.withArgName("port").hasArgs().withDescription("IPFIX collector UDP port (default: 2601)").create("collectorPort");
 
-		Option exporterIPv4 = OptionBuilder.withArgName("IP").hasArgs().withDescription("IPFIX exporter (spoofed) IPv4 address").create("exporterIP");
+		Option exporterIPv4 = OptionBuilder.withArgName("IPv4").hasArgs().withDescription("IPFIX exporter (spoofed) IPv4 address").create("exporterIP");
 		Option exporterPort = OptionBuilder.withArgName("port").hasArgs().withDescription("IPFIX exporter UDP port (default: 2601)").create("exporterPort");
 		
 		Option debug = OptionBuilder.withArgName("debug").withDescription("enable debug").create("debug");
@@ -89,6 +91,7 @@ public class IPFIXGenerator {
 		options.addOption(destIPv6);
 		options.addOption(srcPort);
 		options.addOption(destPort);
+		options.addOption(icmpType);
 		options.addOption(srcIPv4);
 		options.addOption(packets);
 		options.addOption(octets);
@@ -200,6 +203,12 @@ public class IPFIXGenerator {
 			int destPortValue = random.nextInt(65534);
 			if (line.hasOption("destPort")) {
 				destPortValue = Integer.parseInt(line.getOptionValue("destPort"));
+			}
+			
+			// icmp type
+			int icmpTypeValue = 0;
+			if (line.hasOption("icmpType")) {
+				icmpTypeValue = Integer.parseInt(line.getOptionValue("icmpType"));
 			}
 			
 			// packets
@@ -470,6 +479,7 @@ public class IPFIXGenerator {
 			}
 			l2ip.setSourceTransportPort(srcPortValue);
 			l2ip.setDestinationTransportPort(destPortValue);
+			l2ip.setIcmpTypeCodeIPv4(icmpTypeValue);
 			l2ip.setPacketDeltaCount(packetsValue);
 			l2ip.setOctetDeltaCount(octetsValue);
 
