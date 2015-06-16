@@ -545,9 +545,9 @@ public class IPFIXGenerator {
 				if (line.hasOption("debug")) System.out.println("Sending: " + mh);
 				
 				try {
-					long sleep = (1000000 / (dataRateValue * 1000 * 1000 / (octetsValue * 8)));
-					if (line.hasOption("debug")) System.out.println("Waiting: " + sleep + " microseconds");
-					TimeUnit.MICROSECONDS.sleep(sleep);
+					double sleep = samplingRateValue * (1000000 / ((double) (dataRateValue * 1000 * 1000) / (double) ((octetsValue * packetsValue * 8))));
+					if (line.hasOption("debug")) System.out.println("Waiting: " + (long) sleep + " microseconds");
+					TimeUnit.MICROSECONDS.sleep((long) sleep);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
