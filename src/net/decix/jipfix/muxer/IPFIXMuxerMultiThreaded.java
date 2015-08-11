@@ -31,6 +31,14 @@ import java.util.logging.SimpleFormatter;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.savarese.vserv.tcpip.IPPacket;
+import org.savarese.vserv.tcpip.OctetConverter;
+import org.savarese.vserv.tcpip.UDPPacket;
+import org.xml.sax.SAXException;
+
+import com.savarese.rocksaw.net.RawSocket;
+
+import net.decix.jipfix.detector.GroupMissingDataRecordDetector;
 import net.decix.jipfix.header.MessageHeader;
 import net.decix.muxer.ConfigParser;
 import net.decix.muxer.Pinger;
@@ -41,17 +49,16 @@ import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 import net.decix.util.UtilityException;
 
-import org.savarese.vserv.tcpip.IPPacket;
-import org.savarese.vserv.tcpip.OctetConverter;
-import org.savarese.vserv.tcpip.UDPPacket;
-import org.xml.sax.SAXException;
-
-import com.savarese.rocksaw.net.RawSocket;
-
 public class IPFIXMuxerMultiThreaded implements Callable<Void> {
 	private final static Logger LOGGER = Logger.getLogger(IPFIXMuxerMultiThreaded.class.getName());
+
+	private final static GroupMissingDataRecordDetector gmdrd;
 	
 	private ConfigParser cp;
+	
+	static {
+		gmdrd = new GroupMissingDataRecordDetector();
+	}
 	
 	public IPFIXMuxerMultiThreaded(ConfigParser cp) {
 		this.cp = cp;
@@ -85,7 +92,7 @@ public class IPFIXMuxerMultiThreaded implements Callable<Void> {
 				DatagramPacket dp = new DatagramPacket(data, data.length);
 				dsReceive.receive(dp);
 
-				pool.execute(new Handler(socket, plainDestinations, dp));
+				pool.execute(new Handler(socket, plainDestinations, dp, this.gmdrd));
 			}
 		} catch (SocketException se) {
 			se.printStackTrace();
@@ -163,11 +170,13 @@ public class IPFIXMuxerMultiThreaded implements Callable<Void> {
 		private RawSocket socket;
 		private Vector<AddressPort> plainDestinations;
 		private DatagramPacket dp;
+		private GroupMissingDataRecordDetector gmdrd;
 		
-		public Handler(RawSocket socket, Vector<AddressPort> plainDestinations, DatagramPacket dp) {
+		public Handler(RawSocket socket, Vector<AddressPort> plainDestinations, DatagramPacket dp, GroupMissingDataRecordDetector gmdrd) {
 			this.socket = socket;
 			this.plainDestinations = plainDestinations;
 			this.dp = dp;
+			this.gmdrd = gmdrd;
 		}
 
 		@Override
@@ -179,8 +188,7 @@ public class IPFIXMuxerMultiThreaded implements Callable<Void> {
 				if (cp.isIPFIXStartMissingDataRecordDector()) {
 					// parsing is required
 					MessageHeader mh = MessageHeader.parse(dp.getData());
-					
-					LOGGER.log(Level.FINEST, "Be aware: The missing datarecord detector is not working in this setup, so don't expect this information");
+					gmdrd.detectMissing(dp, mh);
 
 					dataMuxer = mh.getBytes();
 				} else {

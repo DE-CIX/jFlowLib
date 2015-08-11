@@ -29,7 +29,14 @@ import java.util.logging.SimpleFormatter;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import net.decix.jipfix.detector.MissingDataRecordDetector;
+import org.savarese.vserv.tcpip.IPPacket;
+import org.savarese.vserv.tcpip.OctetConverter;
+import org.savarese.vserv.tcpip.UDPPacket;
+import org.xml.sax.SAXException;
+
+import com.savarese.rocksaw.net.RawSocket;
+
+import net.decix.jipfix.detector.GroupMissingDataRecordDetector;
 import net.decix.jipfix.header.MessageHeader;
 import net.decix.muxer.ConfigParser;
 import net.decix.muxer.Pinger;
@@ -39,13 +46,6 @@ import net.decix.util.HeaderBytesException;
 import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 import net.decix.util.UtilityException;
-
-import org.savarese.vserv.tcpip.IPPacket;
-import org.savarese.vserv.tcpip.OctetConverter;
-import org.savarese.vserv.tcpip.UDPPacket;
-import org.xml.sax.SAXException;
-
-import com.savarese.rocksaw.net.RawSocket;
 
 public class IPFIXMuxer implements Callable<Void> {
 	private final static Logger LOGGER = Logger.getLogger(IPFIXMuxer.class.getName());
@@ -81,7 +81,7 @@ public class IPFIXMuxer implements Callable<Void> {
 
 			DatagramPacket dp = null;
 			
-			MissingDataRecordDetector mdrd = new MissingDataRecordDetector();
+			GroupMissingDataRecordDetector gmdrd = new GroupMissingDataRecordDetector();
 						
 			while (true) {
 				try {
@@ -95,7 +95,7 @@ public class IPFIXMuxer implements Callable<Void> {
 					if (cp.isIPFIXStartMissingDataRecordDector()) {
 						// parsing is required
 						MessageHeader mh = MessageHeader.parse(dp.getData());
-						mdrd.detectMissing(dp, mh);
+						gmdrd.detectMissing(dp, mh);
 
 						dataMuxer = mh.getBytes();
 					} else {
@@ -162,7 +162,6 @@ public class IPFIXMuxer implements Callable<Void> {
 	public static void main(String args[]) {
 		String cfgPath = "/opt/jipfix-muxer/etc";
 		String logPath = "/opt/jipfix-muxer/log";
-		
 		
 		try {
 			if (args.length == 0) {
