@@ -21,7 +21,7 @@ import net.decix.util.Utility;
  */
 public class SetHeader implements IPFIXEntity {
 	private final static Logger LOGGER = Logger.getLogger(SetHeader.class.getName());
-	private final int HEADERLENGTH = 4;
+	private final static int HEADERLENGTH = 4;
 	
 	private int setID;
 	private int length;

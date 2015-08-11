@@ -29,7 +29,7 @@ import net.decix.util.Utility;
 public class MessageHeader implements IPFIXEntity {
 	private final static Logger LOGGER = Logger.getLogger(SetHeader.class.getName());
 
-	public static final int HEADERLENGTH = 16;
+	private final static int HEADERLENGTH = 16;
 	
 	private int versionNumber;
 	private int length;
