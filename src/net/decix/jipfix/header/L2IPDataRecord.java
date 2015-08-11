@@ -12,7 +12,7 @@ import net.decix.util.MacAddress;
 import net.decix.util.Utility;
 
 public class L2IPDataRecord extends DataRecord {
-	public static final int LENGTH = 111;
+	protected static final int LENGTH = 111;
 	
 	private MacAddress sourceMacAddress;
 	private MacAddress destinationMacAddress;

@@ -5,7 +5,7 @@ import net.decix.util.HeaderParseException;
 import net.decix.util.Utility;
 
 public class InformationElement implements IPFIXEntity {
-	public static final int LENGTH = 4;
+	protected static final int LENGTH = 4;
 	
 	private int informationElementID;
 	private int fieldLength;

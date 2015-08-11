@@ -267,7 +267,6 @@ public class IPFIXGenerator {
 			// Set header for the template
 			SetHeader shTemplate = new SetHeader();
 			mh.getSetHeaders().add(shTemplate);
-			shTemplate.setLength(112);
 			shTemplate.setSetID(2);
 			
 			TemplateRecord tr = new TemplateRecord();
@@ -409,7 +408,6 @@ public class IPFIXGenerator {
 			// Set header for the template options
 			SetHeader shTemplateOptions = new SetHeader();
 			mh.getSetHeaders().add(shTemplateOptions);
-			shTemplateOptions.setLength(28);
 			shTemplateOptions.setSetID(3);
 			
 			OptionTemplateRecord otr = new OptionTemplateRecord();
@@ -442,7 +440,6 @@ public class IPFIXGenerator {
 			// Set header for the sampling
 			SetHeader shSampling = new SetHeader();
 			shSampling.setSetID(256);
-			shSampling.setLength(20);
 			mh.getSetHeaders().add(shSampling);
 			
 			SamplingDataRecord sdr = new SamplingDataRecord();
@@ -455,7 +452,6 @@ public class IPFIXGenerator {
 			// Set header for the L2IP
 			SetHeader shDataRecord = new SetHeader();
 			shDataRecord.setSetID(306);
-			shDataRecord.setLength(115);
 			mh.getSetHeaders().add(shDataRecord);
 			
 			L2IPDataRecord l2ip = new L2IPDataRecord();
@@ -482,13 +478,6 @@ public class IPFIXGenerator {
 			l2ip.setIcmpTypeCodeIPv4(icmpTypeValue);
 			l2ip.setPacketDeltaCount(packetsValue);
 			l2ip.setOctetDeltaCount(octetsValue);
-
-			// length calculation for the Message Header
-			int length = 16;
-			for (SetHeader sheader : mh.getSetHeaders()) {
-				length += sheader.getLength();
-			}
-			mh.setLength(length);
 			
 			// socket handling	
 			RawSocket rawSocket = null;

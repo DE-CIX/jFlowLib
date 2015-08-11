@@ -26,13 +26,11 @@ import net.decix.util.Utility;
  * @author tking
  *
  */
-public class MessageHeader implements IPFIXEntity {
+public class MessageHeader extends AbstractHeader implements IPFIXEntity {
 	private final static Logger LOGGER = Logger.getLogger(SetHeader.class.getName());
-
 	private final static int HEADERLENGTH = 16;
 	
 	private int versionNumber;
-	private int length;
 	private Date exportTime;
 	private long sequenceNumber;
 	private long observationDomainID;
@@ -44,14 +42,6 @@ public class MessageHeader implements IPFIXEntity {
 	
 	public void setVersionNumber(int versionNumber) {
 		this.versionNumber = versionNumber;
-	}
-	
-	public int getLength() {
-		return length;
-	}
-	
-	public void setLength(int length) {
-		this.length = length;
 	}
 	
 	public Date getExportTime() {
@@ -152,8 +142,8 @@ public class MessageHeader implements IPFIXEntity {
 			int offset = 16;
 			for (SetHeader sh : setHeaders) { 
 				byte[] temp = sh.getBytes();
-				System.arraycopy(temp, 0, data, offset, temp.length);
-				offset += temp.length;
+				System.arraycopy(temp, 0, data, offset, sh.getLength());
+				offset += sh.getLength();
 			}
 
 			return data;

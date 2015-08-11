@@ -19,12 +19,11 @@ import net.decix.util.Utility;
  * @author tking
  *
  */
-public class SetHeader implements IPFIXEntity {
+public class SetHeader extends AbstractHeader implements IPFIXEntity {
 	private final static Logger LOGGER = Logger.getLogger(SetHeader.class.getName());
 	private final static int HEADERLENGTH = 4;
 	
 	private int setID;
-	private int length;
 	private List<DataRecord> dataRecords = new ArrayList<DataRecord>();
 	private List<TemplateRecord> templateRecords = new ArrayList<TemplateRecord>();
 	private List<OptionTemplateRecord> optionTemplateRecords = new ArrayList<OptionTemplateRecord>();
@@ -45,20 +44,13 @@ public class SetHeader implements IPFIXEntity {
 		this.setID = setID;
 	}
 	
-	public int getLength() {
-		return length;
-	}
-	
-	public void setLength(int length) {
-		this.length = length;
-	}
-	
 	public List<DataRecord> getDataRecords() {
 		return dataRecords;
 	}
 	
 	public void setDataRecords(List<DataRecord> dataRecords) {
 		this.dataRecords = dataRecords;
+		updateLength();
 	}
 	
 	public List<TemplateRecord> getTemplateRecords() {
@@ -67,6 +59,7 @@ public class SetHeader implements IPFIXEntity {
 	
 	public void setTemplateRecords(List<TemplateRecord> templateRecords) {
 		this.templateRecords = templateRecords;
+		updateLength();
 	}
 	
 	public List<OptionTemplateRecord> getOptionTemplateRecords() {
@@ -75,9 +68,10 @@ public class SetHeader implements IPFIXEntity {
 	
 	public void setOptionTemplateRecords(List<OptionTemplateRecord> optionTemplateRecords) {
 		this.optionTemplateRecords = optionTemplateRecords;
+		updateLength();
 	}
 	
-	public void updateLength() {
+	private void updateLength() {
 		int newLength = 0;
 		for (TemplateRecord template : templateRecords) {
 			newLength += template.getLength();
@@ -88,23 +82,7 @@ public class SetHeader implements IPFIXEntity {
 		for (DataRecord record : dataRecords) {
 			newLength = record.getLength();
 		}
-
-		this.length = newLength + 4;
-	}
-
-	public void setDataRecordsAndUpdateLength(List<DataRecord> dataRecords) {
-		setDataRecords(dataRecords);
-		int recordLengths = 0;
-		for (DataRecord record : dataRecords) {
-			recordLengths += record.getLength();
-		}
-		for (TemplateRecord template : templateRecords) {
-			recordLengths += template.getLength();
-		}
-		for (OptionTemplateRecord optionTemplate : optionTemplateRecords) {
-			recordLengths += optionTemplate.getLength();
-		}
-		setLength(recordLengths + HEADERLENGTH);
+		this.length = newLength + HEADERLENGTH;
 	}
 	
 	public static SetHeader parse(byte[] data) throws HeaderParseException {
@@ -164,19 +142,18 @@ public class SetHeader implements IPFIXEntity {
 	
 	public byte[] getBytes() throws HeaderBytesException {
 		try {
-			int length = 4;
+			int length = HEADERLENGTH;
 			
 			for (DataRecord dr : dataRecords) {
-				if (dr instanceof L2IPDataRecord) length += L2IPDataRecord.LENGTH;
-				if (dr instanceof SamplingDataRecord) length += SamplingDataRecord.LENGTH;
+				length += dr.getLength();
 			}
 			
 			for (TemplateRecord tr : templateRecords) {
-				length += tr.getBytes().length;
+				length += tr.getLength();
 			}
 			
 			for (OptionTemplateRecord otr : optionTemplateRecords) {
-				length += otr.getBytes().length;
+				length += otr.getLength();
 			}
 			
 			byte[] data = new byte[length];
@@ -188,24 +165,19 @@ public class SetHeader implements IPFIXEntity {
 			int offset = 4;
 			
 			for (DataRecord record : dataRecords) {
-				if (record instanceof L2IPDataRecord) {
-					System.arraycopy(record.getBytes(), 0, data, offset, L2IPDataRecord.LENGTH);
-					offset += L2IPDataRecord.LENGTH;
-				} else if (record instanceof SamplingDataRecord) {
-					System.arraycopy(record.getBytes(), 0, data, offset, SamplingDataRecord.LENGTH);
-					offset += SamplingDataRecord.LENGTH;
-				}
+				System.arraycopy(record.getBytes(), 0, data, offset, record.getLength());
+				offset += record.getLength();
 			}
 			
 			for (TemplateRecord record : templateRecords) {
 				byte[] recordData = record.getBytes();
-				System.arraycopy(recordData, 0, data, offset, recordData.length);
+				System.arraycopy(recordData, 0, data, offset, record.getLength());
 				offset += recordData.length;
 			}
 			
 			for (OptionTemplateRecord record : optionTemplateRecords) {
 				byte[] recordData = record.getBytes();
-				System.arraycopy(recordData, 0, data, offset, recordData.length);
+				System.arraycopy(recordData, 0, data, offset, record.getLength());
 				offset += recordData.length;
 			}
 			
