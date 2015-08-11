@@ -21,7 +21,8 @@ import net.decix.util.Utility;
  */
 public class SetHeader implements IPFIXEntity {
 	private final static Logger LOGGER = Logger.getLogger(SetHeader.class.getName());
-
+	private final int HEADERLENGTH = 4;
+	
 	private int setID;
 	private int length;
 	private List<DataRecord> dataRecords = new ArrayList<DataRecord>();
@@ -74,6 +75,36 @@ public class SetHeader implements IPFIXEntity {
 	
 	public void setOptionTemplateRecords(List<OptionTemplateRecord> optionTemplateRecords) {
 		this.optionTemplateRecords = optionTemplateRecords;
+	}
+	
+	public void updateLength() {
+		int newLength = 0;
+		for (TemplateRecord template : templateRecords) {
+			newLength += template.getLength();
+		}
+		for (OptionTemplateRecord optionTemplate : optionTemplateRecords) {
+			newLength += optionTemplate.getLength();
+		}
+		for (DataRecord record : dataRecords) {
+			newLength = record.getLength();
+		}
+
+		this.length = newLength + 4;
+	}
+
+	public void setDataRecordsAndUpdateLength(List<DataRecord> dataRecords) {
+		setDataRecords(dataRecords);
+		int recordLengths = 0;
+		for (DataRecord record : dataRecords) {
+			recordLengths += record.getLength();
+		}
+		for (TemplateRecord template : templateRecords) {
+			recordLengths += template.getLength();
+		}
+		for (OptionTemplateRecord optionTemplate : optionTemplateRecords) {
+			recordLengths += optionTemplate.getLength();
+		}
+		setLength(recordLengths + HEADERLENGTH);
 	}
 	
 	public static SetHeader parse(byte[] data) throws HeaderParseException {

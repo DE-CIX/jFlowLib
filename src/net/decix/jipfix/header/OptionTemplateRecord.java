@@ -93,6 +93,7 @@ public class OptionTemplateRecord extends Record {
 					otr.getInformationElements().add(ie);
 				}
 			}
+			otr.length = data.length;
 			return otr;			
 		} catch (Exception e) {
 			throw new HeaderParseException("Parse error: " + e.getMessage());

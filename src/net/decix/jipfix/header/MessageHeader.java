@@ -29,6 +29,8 @@ import net.decix.util.Utility;
 public class MessageHeader implements IPFIXEntity {
 	private final static Logger LOGGER = Logger.getLogger(SetHeader.class.getName());
 
+	public static final int HEADERLENGTH = 16;
+	
 	private int versionNumber;
 	private int length;
 	private Date exportTime;
@@ -82,6 +84,12 @@ public class MessageHeader implements IPFIXEntity {
 	
 	public void setSetHeaders(List<SetHeader> setHeaders) {
 		this.setHeaders = setHeaders;
+		int length = 0;
+
+		for (SetHeader header : setHeaders) {
+			length += header.getLength();
+		}
+		setLength(length + HEADERLENGTH);
 	}
 	
 	public static MessageHeader parse(byte[] data) throws HeaderParseException {

@@ -261,6 +261,11 @@ public class L2IPDataRecord extends DataRecord {
 	public void setIcmpTypeCodeIPv4(int icmpTypeCodeIPv4) {
 		this.icmpTypeCodeIPv4 = icmpTypeCodeIPv4;
 	}
+	
+	@Override
+	public int getLength() {
+		return LENGTH;
+	}
 
 	public static L2IPDataRecord parse(byte[] data) throws HeaderParseException {
 		try {

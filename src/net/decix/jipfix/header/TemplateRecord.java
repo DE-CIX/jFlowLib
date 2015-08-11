@@ -64,6 +64,7 @@ public class TemplateRecord extends Record {
 				InformationElement ie = InformationElement.parse(subData);
 				tr.getInformationElements().add(ie);
 			}
+			tr.length = data.length;
 			return tr;			
 		} catch (Exception e) {
 			throw new HeaderParseException("Parse error: " + e.getMessage());

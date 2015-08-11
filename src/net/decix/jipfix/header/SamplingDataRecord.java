@@ -44,6 +44,11 @@ public class SamplingDataRecord extends DataRecord {
 		this.samplingPacketSpace = samplingPacketSpace;
 	}
 	
+	@Override
+	public int getLength(){
+		return LENGTH;
+	}
+	
 	public static SamplingDataRecord parse(byte[] data) throws HeaderParseException {
 		try {
 			if (data.length < LENGTH) throw new HeaderParseException("Data array too short.");
