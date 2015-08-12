@@ -24,7 +24,7 @@ import net.decix.util.HeaderParseException;
 public class IPFIXMissingDataRecordDetector {
 	private static final String PCAP_FILE_READ = "/Volumes/Transcend/ipfix-2014-04-14.2.pcap";
 	
-	public static void main(String args[]) throws SecurityException, IOException, PcapNativeException, InterruptedException, NotOpenException, HeaderParseException {
+	public static void main(String args[]) throws SecurityException, IOException, PcapNativeException, InterruptedException, NotOpenException {
 		FileHandler fh = new FileHandler("ipfix-detector.log", 5 * 10485760, 20, true); // 20 x 50MByte
 		fh.setFormatter(new SimpleFormatter());
 		Logger l = Logger.getLogger("");
@@ -44,8 +44,13 @@ public class IPFIXMissingDataRecordDetector {
 					DatagramPacket dp = new DatagramPacket(data, data.length);
 					ds.receive(dp);
 					
-					MessageHeader mh = MessageHeader.parse(dp.getData());
-					gmdrd.detectMissing(dp, mh);
+					MessageHeader mh;
+					try {
+						mh = MessageHeader.parse(dp.getData());
+						gmdrd.detectMissing(dp, mh);
+					} catch (HeaderParseException e) {
+						e.printStackTrace();
+					}
 				} else {
 					PcapHandle handleRead = Pcaps.openOffline(PCAP_FILE_READ);
 
@@ -64,7 +69,6 @@ public class IPFIXMissingDataRecordDetector {
 								MessageHeader mh = MessageHeader.parse(onlyIPFIX);
 								gmdrd.detectMissing(dp, mh);
 							} catch (HeaderParseException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
