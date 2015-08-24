@@ -72,7 +72,7 @@ public class SetHeader extends AbstractHeader implements IPFIXEntity {
 	}
 	
 	private void updateLength() {
-		int newLength = 0;
+		int newLength = HEADERLENGTH;
 		for (TemplateRecord template : templateRecords) {
 			newLength += template.getLength();
 		}
@@ -80,9 +80,9 @@ public class SetHeader extends AbstractHeader implements IPFIXEntity {
 			newLength += optionTemplate.getLength();
 		}
 		for (DataRecord record : dataRecords) {
-			newLength = record.getLength();
+			newLength += record.getLength();
 		}
-		this.length = newLength + HEADERLENGTH;
+		this.length = newLength;
 	}
 	
 	public static SetHeader parse(byte[] data) throws HeaderParseException {
