@@ -17,6 +17,7 @@ import net.decix.util.Utility;
  * @author tking
  */
 public class TemplateRecord extends Record {
+	private final static int HEADERLENGTH = 4;
 	private int templateID;
 	private int fieldCount;
 	private List<InformationElement> informationElements = new ArrayList<InformationElement>();
@@ -73,7 +74,7 @@ public class TemplateRecord extends Record {
 	
 	public byte[] getBytes() throws HeaderBytesException {
 		try {
-			int length = 4 + (informationElements.size() * InformationElement.LENGTH);
+			int length = getLength();
 			byte[] data = new byte[length];
 			// template ID
 			System.arraycopy(Utility.integerToTwoBytes(getTemplateID()), 0, data, 0, 2);
@@ -89,6 +90,15 @@ public class TemplateRecord extends Record {
 		} catch (Exception e) {
 			throw new HeaderBytesException("Error while generating the bytes: " + e.getMessage());
 		}
+	}
+	
+	@Override
+	public int getLength() {
+		int paddingLength = HEADERLENGTH + (informationElements.size() * InformationElement.LENGTH);
+		while (paddingLength % 4 != 0) {
+			paddingLength++;
+		}
+		return paddingLength;
 	}
 	
 	@Override
