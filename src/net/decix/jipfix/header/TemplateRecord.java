@@ -91,6 +91,7 @@ public class TemplateRecord extends Record {
 			throw new HeaderBytesException("Error while generating the bytes: " + e.getMessage());
 		}
 	}
+
 	@Override
         public int getLength() {
         return HEADERLENGTH + (informationElements.size() * InformationElement.LENGTH);
