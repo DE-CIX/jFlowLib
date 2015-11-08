@@ -20,6 +20,7 @@ import net.decix.util.Utility;
  *
  */
 public class OptionTemplateRecord extends Record {
+	private final static int HEADERLENGTH = 6;
 	private int templateID;
 	private int fieldCount;
 	private int scopeFieldCount;
@@ -102,7 +103,7 @@ public class OptionTemplateRecord extends Record {
 	
 	public byte[] getBytes() throws HeaderBytesException {
 		try {
-			int length = 6 + (scopeInformationElements.size() * InformationElement.LENGTH) + (informationElements.size() * InformationElement.LENGTH);
+			int length = getLength();
 			if (length % 4 != 0) length += (length % 4); // padding
 			byte[] data = new byte[length];
 			// template ID
@@ -127,6 +128,16 @@ public class OptionTemplateRecord extends Record {
 		}
 	}
 
+	@Override
+	public int getLength() {
+		int paddingLength = HEADERLENGTH + (scopeInformationElements.size() * InformationElement.LENGTH)
+				+ (informationElements.size() * InformationElement.LENGTH);
+		while (paddingLength % 4 != 0) {
+			paddingLength++;
+		}
+		return paddingLength;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
