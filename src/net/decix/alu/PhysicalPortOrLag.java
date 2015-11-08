@@ -111,22 +111,36 @@ public class PhysicalPortOrLag {
 	
 	public int toInterfaceIndex() {
 		int interfaceIndex = 0;
-		if (mLag) {
-			interfaceIndex = 0x50000000;
-			interfaceIndex = interfaceIndex | mLagId;
+		if (mXRS) {
+			if (mLag) {
+				interfaceIndex = 0x50000000;
+				interfaceIndex = interfaceIndex | mLagId;
+			} else {
+				interfaceIndex = 0x60000000;
+
+				// slot mapping
+				int slotMoved = mSlot << 18;
+				interfaceIndex = interfaceIndex | slotMoved;
+
+				// mda mapping
+				int mdaMoved = mMda << 14;
+				interfaceIndex = interfaceIndex | mdaMoved;
+
+				// port mapping
+				int portMoved = mPort << 3;
+				interfaceIndex = interfaceIndex | portMoved;
+			}
 		} else {
-			interfaceIndex = 0x60000000;
-			
 			// slot mapping
-			int slotMoved = mSlot << 18;
+			int slotMoved = mSlot << 25;
 			interfaceIndex = interfaceIndex | slotMoved;
 			
 			// mda mapping
-			int mdaMoved = mMda << 14;
+			int mdaMoved =  mMda << 21;
 			interfaceIndex = interfaceIndex | mdaMoved;
 			
 			// port mapping
-			int portMoved = mPort << 3;
+			int portMoved =  mPort << 15;
 			interfaceIndex = interfaceIndex | portMoved;
 		}
 		return interfaceIndex;
@@ -144,7 +158,7 @@ public class PhysicalPortOrLag {
 			ppol.setPhysicalPort(true);
 			
 			// port mapping
-			int port = interfaceIndex & 0x01F80000;
+			int port = interfaceIndex & 0x001F8000;
 			port = port >> 15;
 			
 			ppol.setPort(port);
