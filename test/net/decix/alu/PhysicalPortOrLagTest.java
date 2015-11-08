@@ -7,6 +7,7 @@ public class PhysicalPortOrLagTest extends TestCase {
 	public void testParse() {
 		// Physical port (non-XRS)
 		net.decix.alu.PhysicalPortOrLag ppol = net.decix.alu.PhysicalPortOrLag.parse(138739712);
+		assertFalse(ppol.isXRS());
 		assertTrue(ppol.isPhysicalPort());
 		assertFalse(ppol.isLag());
 		assertEquals(0, ppol.getLagId());
@@ -16,6 +17,7 @@ public class PhysicalPortOrLagTest extends TestCase {
 		
 		// Physical port (XRS)
 		ppol = net.decix.alu.PhysicalPortOrLag.parse(1611170072);
+		assertTrue(ppol.isXRS());
 		assertTrue(ppol.isPhysicalPort());
 		assertFalse(ppol.isLag());
 		assertEquals(0, ppol.getLagId());
@@ -25,6 +27,7 @@ public class PhysicalPortOrLagTest extends TestCase {
 		
 		// Lag
 		ppol = net.decix.alu.PhysicalPortOrLag.parse(1342177336);
+		assertTrue(ppol.isXRS());
 		assertFalse(ppol.isPhysicalPort());
 		assertTrue(ppol.isLag());
 		assertEquals(56, ppol.getLagId());
