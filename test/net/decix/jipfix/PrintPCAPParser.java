@@ -20,7 +20,7 @@ import org.pcap4j.packet.UdpPacket;
 import org.pcap4j.util.MacAddress;
 
 public class PrintPCAPParser {  
-	private static final String PCAP_FILE_READ = "/Users/tking/Documents/Entwicklungsprojekte/IPFIX/postDot1qVlanID/vlan_ids.pcap";
+	private static final String PCAP_FILE_READ = "/Volumes/Transcend/ipfix-2014-04-14.3.pcap";
 	
 	public static void main(String[] args) throws PcapNativeException, NotOpenException, InterruptedException {
 		PcapHandle handleRead = Pcaps.openOffline(PCAP_FILE_READ);
@@ -56,12 +56,12 @@ public class PrintPCAPParser {
 							for (DataRecord dr : sh.getDataRecords()) {
 								if (dr instanceof L2IPDataRecord) {
 									L2IPDataRecord lidr = (L2IPDataRecord) dr;
-									net.decix.util.MacAddress macSearch = new net.decix.util.MacAddress("6c:9c:ed:76:91:93");
-									if (((L2IPDataRecord) dr).getSourceMacAddress().equals(macSearch) || ((L2IPDataRecord) dr).getDestinationMacAddress().equals(macSearch)) {
-										if ((lidr.getPostDot1qCustomerVlanId() == 0) && (lidr.getPostDot1qCustomerVlanId() == 0)) {
+//									net.decix.util.MacAddress macSearch = new net.decix.util.MacAddress("6c:9c:ed:76:91:93");
+//									if (((L2IPDataRecord) dr).getSourceMacAddress().equals(macSearch) || ((L2IPDataRecord) dr).getDestinationMacAddress().equals(macSearch)) {
+										if ((lidr.getDot1qVlanId() != 0) && (lidr.getDot1qCustomerVlanId() != 0)) {
 											System.out.println(lidr);
 										}
-									}
+//									}
 								}
 							}
 						}
@@ -69,9 +69,9 @@ public class PrintPCAPParser {
 				} catch (HeaderParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (UtilityException e) {
+//				} catch (UtilityException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+//					e.printStackTrace();
 				}
 			}
 		};

@@ -5,8 +5,17 @@ import junit.framework.TestCase;
 public class PhysicalPortOrLagTest extends TestCase {
 	
 	public void testParse() {
-		// Physical port
-		net.decix.alu.PhysicalPortOrLag ppol = net.decix.alu.PhysicalPortOrLag.parse(1611170072);
+		// Physical port (non-XRS)
+		net.decix.alu.PhysicalPortOrLag ppol = net.decix.alu.PhysicalPortOrLag.parse(138739712);
+		assertTrue(ppol.isPhysicalPort());
+		assertFalse(ppol.isLag());
+		assertEquals(0, ppol.getLagId());
+		assertEquals(4, ppol.getSlot());
+		assertEquals(2, ppol.getMda());
+		assertEquals(128, ppol.getPort());
+		
+		// Physical port (XRS)
+		ppol = net.decix.alu.PhysicalPortOrLag.parse(1611170072);
 		assertTrue(ppol.isPhysicalPort());
 		assertFalse(ppol.isLag());
 		assertEquals(0, ppol.getLagId());

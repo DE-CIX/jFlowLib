@@ -10,6 +10,13 @@ package net.decix.alu;
  * This software is licensed under the Apache License, version 2.0. A copy of 
  * the license agreement is included in this distribution.
  * 
+ * A portid is an unique 32 bit number encoded as shown below.
+ *
+ *           32 30 | 29 26 | 25 22 | 21 16 | 15  1 |
+ *           +-----+-------+-------+-------+-------+
+ *           |000  |  slot |  mda  | port  |  zero | Physical Port
+ *           +-----+-------+-------+-------+-------+
+ * 
  * The XRS platform uses a new port mapping, starting in 11.0R4, as
  * follows:
  *
@@ -44,6 +51,7 @@ public class PhysicalPortOrLag {
 	private int mSlot = 0;
 	private int mMda = 0;
 	private int mPort = 0;
+	private boolean mXRS = false;
 	
 	public boolean isLag() {
 		return mLag;
@@ -93,6 +101,14 @@ public class PhysicalPortOrLag {
 		this.mPort = port;
 	}
 	
+	public boolean isXRS() {
+		return mXRS;
+	}
+	
+	public void setXRS(boolean XRS) {
+		this.mXRS = XRS;
+	}
+	
 	public int toInterfaceIndex() {
 		int interfaceIndex = 0;
 		if (mLag) {
@@ -119,10 +135,40 @@ public class PhysicalPortOrLag {
 	public static PhysicalPortOrLag parse(int interfaceIndex) {
 		PhysicalPortOrLag ppol = new PhysicalPortOrLag();
 		
-		int physicalPort = interfaceIndex & 0x60000000;
-		physicalPort = physicalPort >> 28;
+		//int identifier = interfaceIndex & 0x60000000;
 		
-		if (physicalPort == 6) {
+		// non-XRS systems
+		int identifier = interfaceIndex >> 29;
+		if (identifier == 0) {
+			ppol.setXRS(false);
+			ppol.setPhysicalPort(true);
+			
+			// port mapping
+			int port = interfaceIndex & 0x01F80000;
+			port = port >> 15;
+			
+			ppol.setPort(port);
+			
+			// mda mapping
+			int mda = interfaceIndex & 0x01E00000;
+			mda = mda >> 21;
+			
+			ppol.setMda(mda);
+			
+			// slot mapping
+			int slot = interfaceIndex & 0x1E000000;
+			slot = slot >> 25;
+			
+			ppol.setSlot(slot);
+			
+			return ppol;
+		}
+		
+		// XRS systems
+		identifier = interfaceIndex >> 28;
+		
+		if (identifier == 6) {
+			ppol.setXRS(true);
 			ppol.setPhysicalPort(true);
 			
 			// port mapping
@@ -142,18 +188,23 @@ public class PhysicalPortOrLag {
 			slot = slot >> 18;
 			
 			ppol.setSlot(slot);
-		} else {
+			return ppol;
+		} else if (identifier == 5) {
 			// lag
+			ppol.setXRS(true);
 			ppol.setLag(true);
 			int lagId = interfaceIndex ^ 0x50000000;
 			ppol.setLagId(lagId);
+			return ppol;
 		}
 		return ppol;
 	}
 	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Lag: ");
+		sb.append("XRS: ");
+		sb.append(mXRS);
+		sb.append(", Lag: ");
 		sb.append(mLag);
 		sb.append(", Physical Port: ");
 		sb.append(!mLag);

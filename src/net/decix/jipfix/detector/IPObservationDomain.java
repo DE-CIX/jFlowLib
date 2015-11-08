@@ -1,14 +1,32 @@
 package net.decix.jipfix.detector;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class IPObservationDomain {
 	private InetAddress address;
 	private Long observationDomain;
 	
+	public IPObservationDomain() {
+		try {
+			this.address = InetAddress.getLocalHost();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		this.observationDomain = 1l;
+	}
+	
 	public IPObservationDomain(InetAddress address, long observationDomain) {
 		this.address = address;
 		this.observationDomain = observationDomain;
+	}
+	
+	public InetAddress getAddress() {
+		return address;
+	}
+	
+	public Long getObservationDomain() {
+		return observationDomain;
 	}
 
 	@Override

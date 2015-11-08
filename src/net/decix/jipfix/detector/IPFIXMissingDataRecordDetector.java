@@ -22,7 +22,7 @@ import net.decix.jipfix.header.MessageHeader;
 import net.decix.util.HeaderParseException;
 
 public class IPFIXMissingDataRecordDetector {
-	private static final String PCAP_FILE_READ = "/Volumes/Transcend/ipfix-2014-04-14.2.pcap";
+	private static final String PCAP_FILE_READ = "/Volumes/Transcend/pcap/ipfix-2015-09-21.pcap";
 	
 	public static void main(String args[]) throws SecurityException, IOException, PcapNativeException, InterruptedException, NotOpenException {
 		FileHandler fh = new FileHandler("ipfix-detector.log", 5 * 10485760, 20, true); // 20 x 50MByte
@@ -38,7 +38,7 @@ public class IPFIXMissingDataRecordDetector {
 			final GroupMissingDataRecordDetector gmdrd = new GroupMissingDataRecordDetector();
 			
 			while (true) {
-				boolean file = false;
+				boolean file = true;
 				if (!file) {
 				byte[] data = new byte[65536];
 					DatagramPacket dp = new DatagramPacket(data, data.length);

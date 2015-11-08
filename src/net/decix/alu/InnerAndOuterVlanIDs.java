@@ -57,4 +57,16 @@ public class InnerAndOuterVlanIDs {
 		interfaceIndex = interfaceIndex | mInnerVlanId;
 		return interfaceIndex;
 	}
+	
+	public static void main(String args[]) {
+		InnerAndOuterVlanIDs iaovi = new InnerAndOuterVlanIDs();
+		iaovi.setInnerVlanId(2);
+		iaovi.setOuterVlanId(104);
+		System.out.println(iaovi.toInterfaceIndex());
+		
+		iaovi = InnerAndOuterVlanIDs.parse(1401);
+		System.out.println("Inner: " + iaovi.getInnerVlanId());
+		System.out.println("Outer: " + iaovi.getOuterVlanId());
+		
+	}
 }

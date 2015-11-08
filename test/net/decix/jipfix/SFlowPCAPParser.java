@@ -22,12 +22,13 @@ import org.pcap4j.packet.UdpPacket;
 
 public class SFlowPCAPParser {  
 //	private static final String PCAP_FILE_READ = "/Users/tking/Downloads/2014-03-05_IPFIX_capture01.pcap"; // IPFIX-Test.pcap
-	private static final String PCAP_FILE_READ = "/Users/tking/Downloads/sflow-counter-all-routers-2015-03-16_1.pcap";
+//	private static final String PCAP_FILE_READ = "/Users/tking/Downloads/sflow-counter-all-routers-2015-03-16_1.pcap";
+	private static final String PCAP_FILE_READ = "/Volumes/Transcend/sflow-counter-all-routers-2015-03-16_1.pcap";
 //	private static final String PCAP_FILE_READ = "c:\\tmp\\trace.pcap";
 //	private static final String PCAP_FILE_READ = "/Users/tking/Downloads/ipfix-2014-04-14.2.pcap";
 //	private static final String PCAP_FILE_WRITE = "/Users/tking/Downloads/IPFIX-Test_Created_By_JIPFIX.pcap";
 //	private static final String PCAP_FILE_WRITE = "c:\\tmp\\trace_out.pcap";
-	private static final String PCAP_FILE_WRITE = "/Users/tking/Downloads/IPFIX-Test_Created_By_JSFLOW2.pcap";
+//	private static final String PCAP_FILE_WRITE = "/Users/tking/Downloads/IPFIX-Test_Created_By_JSFLOW2.pcap";
 	
 //	private static PcapHandle handleWrite;
 	private static PcapDumper dumper;
@@ -41,7 +42,7 @@ public class SFlowPCAPParser {
 		PcapHandle handleRead = Pcaps.openOffline(PCAP_FILE_READ);
 		
 //		handleWrite = Pcaps.openOffline(PCAP_FILE_WRITE);
-		dumper = handleRead.dumpOpen(PCAP_FILE_WRITE);
+//		dumper = handleRead.dumpOpen(PCAP_FILE_WRITE);
 
 		PacketListener listener = new PacketListener() {
 			public void gotPacket(Packet fullPacket) {
@@ -63,9 +64,7 @@ public class SFlowPCAPParser {
 //						System.out.println(expandedCounterSampleHeader.getSourceIDType());
 						for (CounterRecordHeader gich : expandedCounterSampleHeader.getCounterRecords()) {
 							if (gich.getGenericInterfaceCounterHeader() != null) {
-								System.out.println("seq: " + expandedCounterSampleHeader.getSequenceNumber());
-								System.out.println("if index:" + gich.getGenericInterfaceCounterHeader().getIfIndex());
-								System.out.println("if type:" + gich.getGenericInterfaceCounterHeader().getIfType());
+								if (gich.getGenericInterfaceCounterHeader().getIfIndex() != 0) System.out.println(gich.getGenericInterfaceCounterHeader());
 							}
 						}
 					}
@@ -81,7 +80,7 @@ public class SFlowPCAPParser {
 
 		handleRead.close();
 		
-		dumper.close();
+//		dumper.close();
 
 		System.out.println("\nObservation domain IDs: (" + observationDomainIDs.size() + ")");
 		for (Long id : observationDomainIDs) {
