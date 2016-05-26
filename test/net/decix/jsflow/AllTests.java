@@ -22,7 +22,8 @@ public class AllTests {
 		TestSuite suite = new TestSuite("Test for net.decix.jsflow");
 		suite.addTestSuite(SflowHeaderTest.class);
 		suite.addTestSuite(SampleDataHeaderTest.class);
-		suite.addTestSuite(ExpandedCounterSampleHeaderTest.class);
+		suite.addTestSuite(ExpandedCounterSampleHeaderTest_01.class);
+		suite.addTestSuite(ExpandedCounterSampleHeaderTest_02.class);
 		suite.addTestSuite(ExpandedFlowSampleHeaderTest.class);
 		suite.addTestSuite(SampleDataHeaderTest.class);
 		return suite;
