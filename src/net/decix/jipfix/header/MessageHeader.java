@@ -22,14 +22,14 @@ import net.decix.util.Utility;
  *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  *  |                    Observation Domain ID                      |
  *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *  
+ *
  * @author tking
  *
  */
 public class MessageHeader extends AbstractHeader implements IPFIXEntity {
 	private final static Logger LOGGER = Logger.getLogger(SetHeader.class.getName());
 	private final static int HEADERLENGTH = 16;
-	
+
 	private int versionNumber;
 	private Date exportTime;
 	private long sequenceNumber;
@@ -47,15 +47,15 @@ public class MessageHeader extends AbstractHeader implements IPFIXEntity {
 	public Date getExportTime() {
 		return exportTime;
 	}
-	
+
 	public void setExportTime(Date exportTime) {
 		this.exportTime = exportTime;
 	}
-	
+
 	public long getSequenceNumber() {
 		return sequenceNumber;
 	}
-	
+
 	public void setSequenceNumber(long sequenceNumber) {
 		this.sequenceNumber = sequenceNumber;
 	}
@@ -110,9 +110,9 @@ public class MessageHeader extends AbstractHeader implements IPFIXEntity {
 			mh.setObservationDomainID(Utility.fourBytesToLong(observationDomainID));
 			// set header
 			int offset = 16;
-			
-			while ((mh.getLength() - offset) > 0) { 
-				byte[] subData = new byte[mh.getLength() - offset]; 
+
+			while ((mh.getLength() - offset) > 0) {
+				byte[] subData = new byte[mh.getLength() - offset];
 				System.arraycopy(data, offset, subData, 0, subData.length);
 				SetHeader sh = SetHeader.parse(subData);
 				mh.getSetHeaders().add(sh);
@@ -124,11 +124,18 @@ public class MessageHeader extends AbstractHeader implements IPFIXEntity {
 			throw new HeaderParseException("Parse error: " + e.getMessage());
 		}
 	}
-	
+
 	public byte[] getBytes() throws HeaderBytesException {
 		try {
-			byte[] data = new byte[length];
-			// version number
+			byte[] data = new byte[1000];
+			length =  10;
+			System.out.println(versionNumber);
+			System.out.println(length);
+			System.out.println(sequenceNumber);
+			System.out.println(observationDomainID);
+			System.out.println(Utility.integerToTwoBytes(versionNumber));
+//			return Utility.integerToTwoBytes(versionNumber);
+//			 version number
 			System.arraycopy(Utility.integerToTwoBytes(versionNumber), 0, data, 0, 2);
 			// length
 			System.arraycopy(Utility.integerToTwoBytes(length), 0, data, 2, 2);
@@ -140,7 +147,7 @@ public class MessageHeader extends AbstractHeader implements IPFIXEntity {
 			System.arraycopy(Utility.longToFourBytes(observationDomainID), 0, data, 12, 4);
 			// set header
 			int offset = 16;
-			for (SetHeader sh : setHeaders) { 
+			for (SetHeader sh : setHeaders) {
 				byte[] temp = sh.getBytes();
 				System.arraycopy(temp, 0, data, offset, sh.getLength());
 				offset += sh.getLength();
@@ -152,7 +159,7 @@ public class MessageHeader extends AbstractHeader implements IPFIXEntity {
 			throw new HeaderBytesException("Error while generating the bytes: " + e.getMessage());
 		}
 	}
-	
+
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[MessageHeader]: ");
