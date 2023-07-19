@@ -15,62 +15,72 @@ import net.decix.util.Utility;
  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  * |          Set ID               |          Length               |
  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *  
+ *
  * @author tking
  *
  */
 public class SetHeader extends AbstractHeader implements IPFIXEntity {
 	private final static Logger LOGGER = Logger.getLogger(SetHeader.class.getName());
 	private final static int HEADERLENGTH = 4;
-	
+
 	private int setID;
 	private List<DataRecord> dataRecords = new ArrayList<DataRecord>();
 	private List<TemplateRecord> templateRecords = new ArrayList<TemplateRecord>();
 	private List<OptionTemplateRecord> optionTemplateRecords = new ArrayList<OptionTemplateRecord>();
-	
+
 	/**
 	 * A value of 2 is reserved for Template Sets. A value of 3 is reserved
 	 * for Options Template Sets.  Values from 4 to 255 are reserved for
 	 * future use.  Values 256 and above are used for Data Sets.  The Set ID
 	 * values of 0 and 1 are not used, for historical reasons.
-	 *  
+	 *
 	 * @return
 	 */
 	public int getSetID() {
 		return setID;
 	}
-	
+
 	public void setSetID(int setID) {
 		this.setID = setID;
 	}
-	
+
 	public List<DataRecord> getDataRecords() {
 		return dataRecords;
 	}
-	
+
+	public void addDataRecord(DataRecord dataRecord) {
+		this.dataRecords.add(dataRecord);
+		updateLength();
+	}
+
 	public void setDataRecords(List<DataRecord> dataRecords) {
 		this.dataRecords = dataRecords;
 		updateLength();
 	}
-	
+
 	public List<TemplateRecord> getTemplateRecords() {
 		return templateRecords;
 	}
-	
+
 	public void setTemplateRecords(List<TemplateRecord> templateRecords) {
 		this.templateRecords = templateRecords;
 		updateLength();
 	}
-	
+
+	public void addTemplateRecord(TemplateRecord templateRecord) {
+		this.templateRecords.add(templateRecord);
+		updateLength();
+	}
+
 	public List<OptionTemplateRecord> getOptionTemplateRecords() {
 		return optionTemplateRecords;
 	}
-	
+
 	public void setOptionTemplateRecords(List<OptionTemplateRecord> optionTemplateRecords) {
 		this.optionTemplateRecords = optionTemplateRecords;
 		updateLength();
 	}
-	
+
 	private void updateLength() {
 		int newLength = HEADERLENGTH;
 		for (TemplateRecord template : templateRecords) {
@@ -84,7 +94,7 @@ public class SetHeader extends AbstractHeader implements IPFIXEntity {
 		}
 		this.length = newLength;
 	}
-	
+
 	public static SetHeader parse(byte[] data) throws HeaderParseException {
 		try {
 			if (data.length < 4) throw new HeaderParseException("Data array too short.");
@@ -100,11 +110,11 @@ public class SetHeader extends AbstractHeader implements IPFIXEntity {
 			// 2 -> template sets;
 			if (sh.getSetID() == 2) {
 				int offset = 4;
-				byte[] subData = new byte[sh.getLength() - offset]; 
+				byte[] subData = new byte[sh.getLength() - offset];
 				System.arraycopy(data, offset, subData, 0, subData.length);
 				TemplateRecord tr = TemplateRecord.parse(subData);
 				sh.getTemplateRecords().add(tr);
-			} 
+			}
 			// 3 -> template option sets
 			else if (sh.getSetID() == 3) {
 				int offset = 4;
@@ -116,17 +126,21 @@ public class SetHeader extends AbstractHeader implements IPFIXEntity {
 			// > 256 -> data record;
 			else if (sh.getSetID() == 256) {
 				int offset = 4;
-				byte[] subData = new byte[sh.getLength() - offset]; 
+				byte[] subData = new byte[sh.getLength() - offset];
 				System.arraycopy(data, offset, subData, 0, SamplingDataRecord.LENGTH);
-				SamplingDataRecord sdr = SamplingDataRecord.parse(subData); 
+				SamplingDataRecord sdr = SamplingDataRecord.parse(subData);
 				sh.getDataRecords().add(sdr);
 			}
 			else if (sh.getSetID() == 306) {
 				int offset = 4;
-				while ((sh.getLength() - offset - L2IPDataRecord.LENGTH) >= 0) { 
-					byte[] subData = new byte[sh.getLength() - offset]; 
+				System.out.println(sh.getLength());
+				System.out.println("SS");
+				System.out.println(sh.getLength());
+
+				while ((sh.getLength() - offset - L2IPDataRecord.LENGTH) >= 0) {
+					byte[] subData = new byte[sh.getLength() - offset];
 					System.arraycopy(data, offset, subData, 0, L2IPDataRecord.LENGTH);
-					L2IPDataRecord lidr = L2IPDataRecord.parse(subData); 
+					L2IPDataRecord lidr = L2IPDataRecord.parse(subData);
 					sh.getDataRecords().add(lidr);
 					offset += L2IPDataRecord.LENGTH;
 				}
@@ -134,28 +148,28 @@ public class SetHeader extends AbstractHeader implements IPFIXEntity {
 			} else {
 				LOGGER.log(Level.INFO, "Set ID " + sh.getSetID() + " is unknown and not handled");
 			}
-			return sh;			
+			return sh;
 		} catch (Exception e) {
 			throw new HeaderParseException("Parse error: " + e.getMessage());
 		}
 	}
-	
+
 	public byte[] getBytes() throws HeaderBytesException {
 		try {
 			int length = HEADERLENGTH;
-			
+
 			for (DataRecord dr : dataRecords) {
 				length += dr.getLength();
 			}
-			
+
 			for (TemplateRecord tr : templateRecords) {
 				length += tr.getLength();
 			}
-			
+
 			for (OptionTemplateRecord otr : optionTemplateRecords) {
 				length += otr.getLength();
 			}
-			
+
 			byte[] data = new byte[length];
 			// set id
 			System.arraycopy(Utility.integerToTwoBytes(getSetID()), 0, data, 0, 2);
@@ -163,30 +177,30 @@ public class SetHeader extends AbstractHeader implements IPFIXEntity {
 			System.arraycopy(Utility.integerToTwoBytes(getLength()), 0, data, 2, 2);
 			// data record
 			int offset = 4;
-			
+
 			for (DataRecord record : dataRecords) {
 				System.arraycopy(record.getBytes(), 0, data, offset, record.getLength());
 				offset += record.getLength();
 			}
-			
+
 			for (TemplateRecord record : templateRecords) {
 				byte[] recordData = record.getBytes();
 				System.arraycopy(recordData, 0, data, offset, record.getLength());
 				offset += recordData.length;
 			}
-			
+
 			for (OptionTemplateRecord record : optionTemplateRecords) {
 				byte[] recordData = record.getBytes();
 				System.arraycopy(recordData, 0, data, offset, record.getLength());
 				offset += recordData.length;
 			}
-			
+
 			return data;
 		} catch (Exception e) {
 			throw new HeaderBytesException("Error while generating the bytes: " + e.getMessage());
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

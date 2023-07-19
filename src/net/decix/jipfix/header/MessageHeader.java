@@ -35,15 +35,15 @@ public class MessageHeader extends AbstractHeader implements IPFIXEntity {
 	private long sequenceNumber;
 	private long observationDomainID;
 	private List<SetHeader> setHeaders = new ArrayList<SetHeader>();
-	
+
 	public int getVersionNumber() {
 		return versionNumber;
 	}
-	
+
 	public void setVersionNumber(int versionNumber) {
 		this.versionNumber = versionNumber;
 	}
-	
+
 	public Date getExportTime() {
 		return exportTime;
 	}
@@ -59,19 +59,19 @@ public class MessageHeader extends AbstractHeader implements IPFIXEntity {
 	public void setSequenceNumber(long sequenceNumber) {
 		this.sequenceNumber = sequenceNumber;
 	}
-	
+
 	public long getObservationDomainID() {
 		return observationDomainID;
 	}
-	
+
 	public void setObservationDomainID(long observationDomainID) {
 		this.observationDomainID = observationDomainID;
 	}
-	
+
 	public List<SetHeader> getSetHeaders() {
 		return setHeaders;
 	}
-	
+
 	public void setSetHeaders(List<SetHeader> setHeaders) {
 		this.setHeaders = setHeaders;
 		int length = 0;
@@ -81,7 +81,20 @@ public class MessageHeader extends AbstractHeader implements IPFIXEntity {
 		}
 		setLength(length + HEADERLENGTH);
 	}
-	
+
+
+	public void addSetHeader(SetHeader setHeader) {
+		this.setHeaders.add(setHeader);
+		// trim down this one.
+		int length = 0;
+		for (SetHeader header : setHeaders) {
+			System.out.println(header);
+			System.out.println(header.getLength());
+
+			length += header.getLength();
+		}
+		setLength(length + HEADERLENGTH);
+	}
 	public static MessageHeader parse(byte[] data) throws HeaderParseException {
 		try {
 			if (data.length < 16) throw new HeaderParseException("Data array too short.");
@@ -127,13 +140,14 @@ public class MessageHeader extends AbstractHeader implements IPFIXEntity {
 
 	public byte[] getBytes() throws HeaderBytesException {
 		try {
-			byte[] data = new byte[1000];
-			length =  10;
-			System.out.println(versionNumber);
-			System.out.println(length);
-			System.out.println(sequenceNumber);
-			System.out.println(observationDomainID);
-			System.out.println(Utility.integerToTwoBytes(versionNumber));
+
+			byte[] data = new byte[length];
+//			length =  10;
+//			System.out.println(setHeaders);
+//			System.out.println(length);
+//			System.out.println(sequenceNumber);
+//			System.out.println(observationDomainID);
+//			System.out.println(Utility.integerToTwoBytes(versionNumber));
 //			return Utility.integerToTwoBytes(versionNumber);
 //			 version number
 			System.arraycopy(Utility.integerToTwoBytes(versionNumber), 0, data, 0, 2);

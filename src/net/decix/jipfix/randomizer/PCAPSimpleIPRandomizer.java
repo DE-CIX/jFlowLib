@@ -27,12 +27,12 @@ import org.pcap4j.packet.UdpPacket;
 public class PCAPSimpleIPRandomizer {
 	private static final String PCAP_FILE_READ = "/Users/tking/Downloads/ipfix-all-routers-2014-12-18.pcap";
 	private static final String FILE_WRITE = "/Users/tking/Downloads/meta_simple.txt";
-	
+
 	public static void main(String[] args) throws PcapNativeException, NotOpenException, InterruptedException, IOException {
 		final PcapHandle pcapHandleReadOffline = Pcaps.openOffline(PCAP_FILE_READ);
-		
+
 		final FileWriter fw = new FileWriter(new File(FILE_WRITE));
-		
+
 		PacketListener packetListener = new PacketListener() {
 			SimpleIPv4AddressRandomizer ipV4randomizer = new SimpleIPv4AddressRandomizer();
 			SimpleIPv6AddressRandomizer ipV6randomizer = new SimpleIPv6AddressRandomizer();
@@ -45,7 +45,7 @@ public class PCAPSimpleIPRandomizer {
 				fullPacket.getHeader();
 
 				if (udpPacket == null) return;
-				
+
 				byte[] rawUpdPacketBytes = udpPacket.getRawData();
 				byte[] onlyIPFIXbytes = new byte[rawUpdPacketBytes.length - 8];
 				System.arraycopy(rawUpdPacketBytes, 8, onlyIPFIXbytes, 0, rawUpdPacketBytes.length - 8);
@@ -60,28 +60,28 @@ public class PCAPSimpleIPRandomizer {
 								boolean foundIPv6 = false;
 								boolean foundIPv4 = false;
 								if (currentDataRecord instanceof L2IPDataRecord) {
-									
+
 									L2IPDataRecord l2IPDataRecord = (L2IPDataRecord) currentDataRecord;
-									
+
 									if (Utility.isConfigured(l2IPDataRecord.getSourceIPv4Address())) {
 										foundIPv4 = true;
 									}
 									if (Utility.isConfigured(l2IPDataRecord.getDestinationIPv4Address())) {
 										foundIPv4 = true;
 									}
-									
-									if (Utility.isConfigured(l2IPDataRecord.getSourceIPv6Address())) {
-										foundIPv6 = true;
-									}
-									if (Utility.isConfigured(l2IPDataRecord.getDestinationIPv6Address())) {
-										foundIPv6 = true;
-									}
-									
-									Inet4Address realDestinationIpv4 = l2IPDataRecord.getDestinationIPv4Address();
-									Inet4Address realSourceIpv4 = l2IPDataRecord.getSourceIPv4Address();
 
-									Inet6Address realDestinationIpv6 = l2IPDataRecord.getDestinationIPv6Address();
-									Inet6Address realSourceIpv6 = l2IPDataRecord.getSourceIPv6Address();
+//									if (Utility.isConfigured(l2IPDataRecord.getSourceIPv6Address())) {
+//										foundIPv6 = true;
+//									}
+//									if (Utility.isConfigured(l2IPDataRecord.getDestinationIPv6Address())) {
+//										foundIPv6 = true;
+//									}
+//
+//									Inet4Address realDestinationIpv4 = l2IPDataRecord.getDestinationIPv4Address();
+//									Inet4Address realSourceIpv4 = l2IPDataRecord.getSourceIPv4Address();
+//
+//									Inet6Address realDestinationIpv6 = l2IPDataRecord.getDestinationIPv6Address();
+//									Inet6Address realSourceIpv6 = l2IPDataRecord.getSourceIPv6Address();
 
 									Inet4Address fakeDestinationIpv4 = null;
 									Inet4Address fakeSourceIpv4 = null;
@@ -89,19 +89,19 @@ public class PCAPSimpleIPRandomizer {
 									Inet6Address fakeDestinationIpv6 = null;
 									Inet6Address fakeSourceIpv6 = null;
 
-									if (foundIPv4) {
-										fakeDestinationIpv4 = (Inet4Address) ipV4randomizer.randomize(realDestinationIpv4);
-										fakeSourceIpv4 = (Inet4Address) ipV4randomizer.randomize(realSourceIpv4);
-
-										fw.write(timestampInts + "." + timestampMicros + " " + fakeSourceIpv4.getHostAddress() + " " + fakeDestinationIpv4.getHostAddress() + " " + (l2IPDataRecord.getOctetDeltaCount()/l2IPDataRecord.getPacketDeltaCount()) + "\n");
-									}
-
-									if (foundIPv6) {
-										fakeSourceIpv6 = (Inet6Address) ipV6randomizer.randomize(realSourceIpv6);
-										fakeDestinationIpv6 = (Inet6Address) ipV6randomizer.randomize(realDestinationIpv6);
-										
-										fw.write(timestampInts + "." + timestampMicros + " " + fakeSourceIpv6.getHostAddress() + " " + fakeDestinationIpv6.getHostAddress() + " " + (l2IPDataRecord.getOctetDeltaCount()/l2IPDataRecord.getPacketDeltaCount()) + "\n");
-									}
+//									if (foundIPv4) {
+//										fakeDestinationIpv4 = (Inet4Address) ipV4randomizer.randomize(realDestinationIpv4);
+//										fakeSourceIpv4 = (Inet4Address) ipV4randomizer.randomize(realSourceIpv4);
+//
+//										fw.write(timestampInts + "." + timestampMicros + " " + fakeSourceIpv4.getHostAddress() + " " + fakeDestinationIpv4.getHostAddress() + " " + (l2IPDataRecord.getOctetDeltaCount()/l2IPDataRecord.getPacketDeltaCount()) + "\n");
+//									}
+//
+//									if (foundIPv6) {
+//										fakeSourceIpv6 = (Inet6Address) ipV6randomizer.randomize(realSourceIpv6);
+//										fakeDestinationIpv6 = (Inet6Address) ipV6randomizer.randomize(realDestinationIpv6);
+//
+//										fw.write(timestampInts + "." + timestampMicros + " " + fakeSourceIpv6.getHostAddress() + " " + fakeDestinationIpv6.getHostAddress() + " " + (l2IPDataRecord.getOctetDeltaCount()/l2IPDataRecord.getPacketDeltaCount()) + "\n");
+//									}
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -117,7 +117,7 @@ public class PCAPSimpleIPRandomizer {
 
 		pcapHandleReadOffline.loop(-1, packetListener);
 		pcapHandleReadOffline.close();
-		
+
 		fw.close();
 	}
 }
