@@ -180,10 +180,10 @@ public class IPFIXGenerator {
 				mh.setExportTime(new Date());
 				seqNumber++;
 				count = count + 1;
-//				var nextIp = destIp.get(rand.nextInt(2));
+				var nextIp = destIp.get(rand.nextInt(2));
 
 				var exporterIPv4Value =  (Inet4Address) Inet4Address.getByName("10.43.7.117");
-				var collectorIPv4Value = (Inet4Address) Inet4Address.getByName("192.168.1.254"); //192.168.1.254 //10.43.7.116"
+				var collectorIPv4Value = (Inet4Address) Inet4Address.getByName(nextIp); //192.168.1.254 //10.43.7.116"
 				var exporterPortValue = Integer.parseInt("4003");
 				var collectorPortValue = Integer.parseInt("2055");
 
