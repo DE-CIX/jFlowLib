@@ -12,7 +12,7 @@ import net.decix.util.MacAddress;
 import net.decix.util.Utility;
 
 public class L2IPDataRecord extends DataRecord {
-	protected static final int LENGTH = 36;
+	protected static final int LENGTH = 26;
 
 	//	private MacAddress sourceMacAddress;
 //	private MacAddress destinationMacAddress;
@@ -28,8 +28,39 @@ public class L2IPDataRecord extends DataRecord {
 //	private Inet6Address destinationIPv6Address;
 	private long packetDeltaCount;
 	private long octetDeltaCount;
+
+	public long getTxCount() {
+		return txCount;
+	}
+
+	public void setTxCount(long txCount) {
+		this.txCount = txCount;
+	}
+
+	public long getRxCount() {
+		return rxCount;
+	}
+
+	public void setRxCount(long rxCount) {
+		this.rxCount = rxCount;
+	}
+
+	public long getFlowDuration() {
+		return flowDuration;
+	}
+
+	public void setFlowDuration(long flowDuration) {
+		this.flowDuration = flowDuration;
+	}
+
+	private long txCount;
+
+	private long rxCount;
 	private BigInteger flowStartMilliseconds;
 	private BigInteger flowEndMilliseconds;
+
+	private long flowDuration;
+
 	private int sourceTransportPort;
 	private int destinationTransportPort;
 	//	private int tcpControlBits;
@@ -407,21 +438,19 @@ public class L2IPDataRecord extends DataRecord {
 			// destinationIPv6Address
 //			System.arraycopy(destinationIPv6Address.getAddress(), 0, data, 52, 16);
 			// packetDeltaCount
-			System.arraycopy(Utility.longToFourBytes(packetDeltaCount), 0, data, 8, 4);
+			System.arraycopy(Utility.longToFourBytes(txCount), 0, data, 8, 4);
 			// octetDeltaCount
-			System.arraycopy(Utility.longToFourBytes(octetDeltaCount), 0, data, 12, 4);
+			System.arraycopy(Utility.longToFourBytes(rxCount), 0, data, 12, 4);
 			// flowStartMilliseconds
-			System.arraycopy(Utility.BigIntegerToEightBytes(flowStartMilliseconds), 0, data, 20, 8);
-			// flowEndMilliseconds
-			System.arraycopy(Utility.BigIntegerToEightBytes(flowEndMilliseconds), 0, data, 28, 8);
+			System.arraycopy(Utility.longToFourBytes(flowDuration), 0, data, 16, 4);
 			// sourceTransportPort
-			System.arraycopy(Utility.integerToTwoBytes(sourceTransportPort), 0, data, 30, 2);
+			System.arraycopy(Utility.integerToTwoBytes(sourceTransportPort), 0, data, 20, 2);
 			// destinationTransportPort
-			System.arraycopy(Utility.integerToTwoBytes(destinationTransportPort), 0, data, 32, 2);
+			System.arraycopy(Utility.integerToTwoBytes(destinationTransportPort), 0, data, 22, 2);
 			// tcpControlBits
 //			data[96] = Utility.integerToOneByte(tcpControlBits);
 //			 protocolIdentifier
-			data[33] = Utility.integerToOneByte(protocolIdentifier);
+			data[24] = Utility.integerToOneByte(protocolIdentifier);
 			// ipv6ExtensionHeaders
 //			System.arraycopy(Utility.longToFourBytes(ipv6ExtensionHeaders), 0, data, 98, 4);
 			// nextHeaderIPv6
@@ -431,7 +460,7 @@ public class L2IPDataRecord extends DataRecord {
 			// ipClassOfService
 //			data[107] = Utility.shortToOneByte(ipClassOfService);
 			// ipVersion
-			data[34] = Utility.shortToOneByte(ipVersion);
+			data[25] = Utility.shortToOneByte(ipVersion);
 			// icmpTypeCodeIPv4
 //			System.arraycopy(Utility.integerToTwoBytes(icmpTypeCodeIPv4), 0, data, 109, 2);
 

@@ -32,18 +32,96 @@ public class IPFIXGenerator {
 	public static void main(String args[]) {
 		try {
 
-			var ipVersionValue = Short.parseShort("4");
+			var ipVersionValue = 4;
 			var transportProtocolValue = Short.parseShort("6");
-			var srcIPv4Value = (Inet4Address) Inet4Address.getByName("100.1.2.1");
-			var destIPv4Value = (Inet4Address) Inet4Address.getByName("100.1.2.7");
-			var exporterIPv4Value =  (Inet4Address) Inet4Address.getByName("10.43.7.117");
-			var collectorIPv4Value = (Inet4Address) Inet4Address.getByName("10.43.7.116"); //192.168.1.254
-			var srcPortValue = Integer.parseInt("4001");
-			var destPortValue = Integer.parseInt("4002");
-			var exporterPortValue = Integer.parseInt("4003");
-			var collectorPortValue = Integer.parseInt("2055");
-			Random random = new Random();
-			int samplingRateValue = 10000;
+			Random rand = new Random();
+
+
+
+			/**
+			 *
+			 * Nginx (443) 10.1.1.1 --> Graphql (4000) 10.1.1.2
+			 * Graphql (4000) 10.1.1.2 --> signup(6422) 10.1.1.3
+			 * Graphql (4000) 10.1.1.2 --> Payments (4230) 10.1.1.4
+			 * signup(6422) 10.1.1.3 --> Postgres (5432) 10.1.1.5
+			 * Payments (4230) 10.1.1.4 --> Arango (8529) 10.1.1.6
+			 * Payments (4230) 10.1.1.4 --> kafka (9092) 10.1.1.7
+			 * kafka (9092) 10.1.1.7 --> zookeeper (2181) 10.1.1.8
+			 * kafka (9092) 10.1.1.7 --> history (5430) 10.1.1.9
+			 * history (5430) 10.1.1.9 -> Memcached (11211) 10.1.1.10
+			 * Memcached (11211) 10.1.1.10 -> Cassandra (7000) 10.1.1.11
+			 *
+			 * Every IPFix should contain the following:
+			 * 1 flow of the following :
+			 * Nginx -> GraphQL -> TxBytes 2048, Rx-bytes: 1024, duration: 400 ms
+			 * GraphQL -> SignuP -> TxBytes 2048, Rx-bytes: 1024, duration: 100 ms
+			 * SignUp -> postgres  -> TxBytes 2048, Rx-Bytes: 1024, duration: 200 ms
+			 *
+			 * 4 flows of the following
+			 * Nginx -> GraphQL  -> TxBytes 1024, Rx-Bytes: 512 duration: 800 ms
+			 * GraphQL -> payments -> TxBytes: 1024, Rx-Bytes: 512, duration: 400ms
+			 * Payments -> Arango -> TxBytes: 1024, Rx-Bytes: 512, duration: 400ms
+			 * Payments -> Kafka -> TxBytes: 1024, Rx-Bytes: 512, duration: 100 ms
+			 * Kafka -> History TxBytes: 1024, Rx-Bytes: 512, duration: 200ms
+			 * History -> MemCached: TxBytes: 1024, Rx-Bytes: 512, duration: 50ms
+			 *
+			 * 10 flows of the following:
+			 * MemCached -> Cassandra TxBytes: 8192, Rx-Bytes: 256, duration: 300ms
+			 *
+			 * 1 flow of the following:
+			 * Kafka -> Zookeeper, TxBytes 256, Rx-bytes: 1024, duration: 50 ms
+			 */
+
+			var edgeMap = new ArrayList<>(
+					List.of(
+							List.of("10.1.1.1", "443", "10.1.1.2", "4000", "2048", "1024", "400"),
+							List.of("10.1.1.2", "4000", "10.1.1.3", "6422", "2048", "1024", "100"),
+							List.of("10.1.1.3", "6422", "10.1.1.5", "5432", "2048", "1024", "200"),
+							List.of("10.1.1.2", "4000", "10.1.1.4", "4230", "1024", "512", "400"),
+							List.of("10.1.1.4", "4230", "10.1.1.6", "8529", "1024", "512", "400"),
+							List.of("10.1.1.4", "4230", "10.1.1.7", "9092", "1024", "512", "100"),
+							List.of("10.1.1.7", "9092", "10.1.1.9", "5430", "1024", "512", "200"),
+							List.of("10.1.1.9", "5430", "10.1.1.10", "11211", "1024", "512", "50"),
+							List.of("10.1.1.2", "4000", "10.1.1.4", "4230", "1024", "512", "400"),
+							List.of("10.1.1.4", "4230", "10.1.1.6", "8529", "1024", "512", "400"),
+							List.of("10.1.1.4", "4230", "10.1.1.7", "9092", "1024", "512", "100"),
+							List.of("10.1.1.7", "9092", "10.1.1.9", "5430", "1024", "512", "200"),
+							List.of("10.1.1.9", "5430", "10.1.1.10", "11211", "1024", "512", "50"),
+							List.of("10.1.1.2", "4000", "10.1.1.4", "4230", "1024", "512", "400"),
+							List.of("10.1.1.4", "4230", "10.1.1.6", "8529", "1024", "512", "400"),
+							List.of("10.1.1.4", "4230", "10.1.1.7", "9092", "1024", "512", "100"),
+							List.of("10.1.1.7", "9092", "10.1.1.9", "5430", "1024", "512", "200"),
+							List.of("10.1.1.9", "5430", "10.1.1.10", "11211", "1024", "512", "50"),
+							List.of("10.1.1.2", "4000", "10.1.1.4", "4230", "1024", "512", "400"),
+							List.of("10.1.1.4", "4230", "10.1.1.6", "8529", "1024", "512", "400"),
+							List.of("10.1.1.4", "4230", "10.1.1.7", "9092", "1024", "512", "100"),
+							List.of("10.1.1.7", "9092", "10.1.1.9", "5430", "1024", "512", "200"),
+							List.of("10.1.1.9", "5430", "10.1.1.10", "11211", "1024", "512", "50"),
+							List.of("10.1.1.7", "9092", "10.1.1.8", "2181", "256", "1024", "50"),
+							List.of("10.1.1.10", "11211", "10.1.1.11", "7000", "8192", "256", "300"),
+							List.of("10.1.1.10", "11211", "10.1.1.11", "7000", "8192", "256", "300"),
+							List.of("10.1.1.10", "11211", "10.1.1.11", "7000", "8192", "256", "300"),
+							List.of("10.1.1.10", "11211", "10.1.1.11", "7000", "8192", "256", "300"),
+							List.of("10.1.1.10", "11211", "10.1.1.11", "7000", "8192", "256", "300"),
+							List.of("10.1.1.10", "11211", "10.1.1.11", "7000", "8192", "256", "300"),
+							List.of("10.1.1.10", "11211", "10.1.1.11", "7000", "8192", "256", "300"),
+							List.of("10.1.1.10", "11211", "10.1.1.11", "7000", "8192", "256", "300"),
+							List.of("10.1.1.10", "11211", "10.1.1.11", "7000", "8192", "256", "300"),
+							List.of("10.1.1.10", "11211", "10.1.1.11", "7000", "8192", "256", "300")
+							)
+			);
+
+
+			var destIp = new ArrayList<String>();
+			destIp.add("10.43.7.116");
+			destIp.add("10.43.15.1");
+
+
+
+
+
+
+
 
 			MessageHeader mh = new MessageHeader();
 			mh.setVersionNumber(10);
@@ -64,41 +142,29 @@ public class IPFIXGenerator {
 			SetHeader shDataRecord = new SetHeader();
 			shDataRecord.setSetID(306);
 
-			L2IPDataRecord l2ip = new L2IPDataRecord();
+			for(List<String> arr: edgeMap) {
 
-			l2ip.setSourceIPv4Address(srcIPv4Value);
+				var srcIPv4Value = (Inet4Address) Inet4Address.getByName(arr.get(0));
+				var destIPv4Value = (Inet4Address) Inet4Address.getByName(arr.get(2));
+				var srcPortValue = Integer.parseInt(arr.get(1));
+				var destPortValue = Integer.parseInt(arr.get(3));
+				var TX = Integer.parseInt(arr.get(4));
+				var RX = Integer.parseInt(arr.get(5));
+				long duration = Long.parseLong(arr.get(6));
 
-			l2ip.setDestinationIPv4Address(destIPv4Value);
-
-			var packetsValue = 10;
-			var octetsValue = 100000;
-			l2ip.setPacketDeltaCount(packetsValue);
-			l2ip.setOctetDeltaCount(octetsValue);
-
-			BigInteger flowStartEnd = BigInteger.valueOf(new Date().getTime());
-
-			l2ip.setFlowStartMilliseconds(flowStartEnd);
-			l2ip.setFlowEndMilliseconds(flowStartEnd);
-
-			l2ip.setSourceTransportPort(srcPortValue);
-			l2ip.setDestinationTransportPort(destPortValue);
-
-			l2ip.setProtocolIdentifier(transportProtocolValue);
-
-
-			l2ip.setIpVersion(ipVersionValue);
+				L2IPDataRecord l2ip = getDataRecord((short) ipVersionValue,
+						transportProtocolValue,
+						srcIPv4Value,
+						destIPv4Value,
+						srcPortValue,
+						destPortValue,
+						TX,
+						RX,
+						duration);
+				shDataRecord.addDataRecord(l2ip);
+			}
 
 
-
-			int dataRateValue = 1;
-
-
-			shDataRecord.addDataRecord(l2ip);
-			shDataRecord.addDataRecord(l2ip);
-			shDataRecord.addDataRecord(l2ip);
-			shDataRecord.addDataRecord(l2ip);
-			shDataRecord.addDataRecord(l2ip);
-			shDataRecord.addDataRecord(l2ip);
 
 			mh.addSetHeader(shDataRecord);
 
@@ -106,11 +172,20 @@ public class IPFIXGenerator {
 			DatagramSocket datagramSocket = null;
 
 			long seqNumber = 0;
+			var curTime = System.currentTimeMillis();
+			var count = 0;
 			while (true) {
 				// Message header updating
 				mh.setSequenceNumber(seqNumber);
 				mh.setExportTime(new Date());
 				seqNumber++;
+				count = count + 1;
+//				var nextIp = destIp.get(rand.nextInt(2));
+
+				var exporterIPv4Value =  (Inet4Address) Inet4Address.getByName("10.43.7.117");
+				var collectorIPv4Value = (Inet4Address) Inet4Address.getByName("192.168.1.254"); //192.168.1.254 //10.43.7.116"
+				var exporterPortValue = Integer.parseInt("4003");
+				var collectorPortValue = Integer.parseInt("2055");
 
 				byte[] data = new byte[mh.getBytes().length];
 				UDPPacket udp = new UDPPacket(28 + data.length);
@@ -127,7 +202,6 @@ public class IPFIXGenerator {
 
 				byte[] pktData = new byte[udp.size()];
 
-//					Flow
 				udp.setDestinationAsWord(OctetConverter.octetsToInt(collectorIPv4Value.getAddress()));
 				udp.setSourceAsWord(OctetConverter.octetsToInt(exporterIPv4Value.getAddress()));
 				System.arraycopy(data, 0, pktData, 28, data.length);
@@ -139,6 +213,13 @@ public class IPFIXGenerator {
 				datagramSocket = new DatagramSocket(exporterPortValue);
 				datagramSocket.send(dp);
 				datagramSocket.close();
+
+				if(System.currentTimeMillis() - curTime > 1000) {
+					System.out.println("Current Rate (flows/second):");
+					System.out.println(count * 34);
+					count = 0;
+					curTime = System.currentTimeMillis();
+				}
 			}
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
@@ -155,11 +236,46 @@ public class IPFIXGenerator {
 		}
 	}
 
+	private static L2IPDataRecord getDataRecord(short ipVersionValue, short transportProtocolValue, Inet4Address srcIPv4Value, Inet4Address destIPv4Value, int srcPortValue, int destPortValue, int TX, int RX, long duration) throws UnknownHostException {
+		L2IPDataRecord l2ip = new L2IPDataRecord();
+		l2ip.setSourceIPv4Address(srcIPv4Value);
+		l2ip.setDestinationIPv4Address(destIPv4Value);
+		l2ip.setTxCount(TX);
+		l2ip.setRxCount(RX);
+		l2ip.setFlowDuration(duration);
+		l2ip.setSourceTransportPort(srcPortValue);
+		l2ip.setDestinationTransportPort(destPortValue);
+		l2ip.setProtocolIdentifier(transportProtocolValue);
+		l2ip.setIpVersion(ipVersionValue);
+		return l2ip;
+	}
+
+//	private static void setDataRecord(short ipVersionValue,
+//									  short transportProtocolValue,
+//									  Inet4Address srcIPv4Value,
+//									  Inet4Address destIPv4Value,
+//									  int srcPortValue,
+//									  int destPortValue,
+//									  int TX,
+//									  int RX,
+//									  long duration,
+//									  L2IPDataRecord l2ip) {
+//		l2ip.setSourceIPv4Address(srcIPv4Value);
+//		l2ip.setDestinationIPv4Address(destIPv4Value);
+//		l2ip.setTxCount(TX);
+//		l2ip.setRxCount(RX);
+//		l2ip.setFlowDuration(duration);
+//		l2ip.setSourceTransportPort(srcPortValue);
+//		l2ip.setDestinationTransportPort(destPortValue);
+//		l2ip.setProtocolIdentifier(transportProtocolValue);
+//		l2ip.setIpVersion(ipVersionValue);
+//	}
+
 	private static TemplateRecord getTemplateRecord() {
 		TemplateRecord tr = new TemplateRecord();
 
 		tr.setTemplateID(306);
-		tr.setFieldCount(10);
+		tr.setFieldCount(9);
 
 		InformationElement iEIPv4Src = new InformationElement();
 		iEIPv4Src.setFieldLength(4);
@@ -171,25 +287,22 @@ public class IPFIXGenerator {
 		iEIPv4Dest.setInformationElementID(12);
 		tr.getInformationElements().add(iEIPv4Dest);
 
-		InformationElement iEPkts = new InformationElement();
-		iEPkts.setFieldLength(4);
-		iEPkts.setInformationElementID(2);
-		tr.getInformationElements().add(iEPkts);
 
 		InformationElement iEBytes = new InformationElement();
 		iEBytes.setFieldLength(4);
-		iEBytes.setInformationElementID(1);
+		iEBytes.setInformationElementID(231);
 		tr.getInformationElements().add(iEBytes);
 
-		InformationElement iEFlowStart = new InformationElement();
-		iEFlowStart.setFieldLength(8);
-		iEFlowStart.setInformationElementID(152);
-		tr.getInformationElements().add(iEFlowStart);
+		InformationElement iEReversedBytes = new InformationElement();
+		iEReversedBytes.setFieldLength(4);
+		iEReversedBytes.setInformationElementID(232);
+		tr.getInformationElements().add(iEReversedBytes);
 
-		InformationElement iEFlowEnd = new InformationElement();
-		iEFlowEnd.setFieldLength(8);
-		iEFlowEnd.setInformationElementID(153);
-		tr.getInformationElements().add(iEFlowEnd);
+
+		InformationElement iEFlowDuration = new InformationElement();
+		iEFlowDuration.setFieldLength(4);
+		iEFlowDuration.setInformationElementID(161);
+		tr.getInformationElements().add(iEFlowDuration);
 
 		InformationElement iEPortSrc = new InformationElement();
 		iEPortSrc.setFieldLength(2);
@@ -201,25 +314,15 @@ public class IPFIXGenerator {
 		iEPortDest.setInformationElementID(11);
 		tr.getInformationElements().add(iEPortDest);
 
-		InformationElement iETCPFlags = new InformationElement();
-		iETCPFlags.setFieldLength(1);
-		iETCPFlags.setInformationElementID(6);
-		tr.getInformationElements().add(iETCPFlags);
-
 		InformationElement iEProtocol = new InformationElement();
 		iEProtocol.setFieldLength(1);
 		iEProtocol.setInformationElementID(4);
 		tr.getInformationElements().add(iEProtocol);
 
-//		InformationElement iEFlowLabel = new InformationElement();
-//		iEFlowLabel.setFieldLength(4);
-//		iEFlowLabel.setInformationElementID(31);
-//		tr.getInformationElements().add(iEFlowLabel);
-//
-//		InformationElement iEIPVersion = new InformationElement();
-//		iEIPVersion.setFieldLength(1);
-//		iEIPVersion.setInformationElementID(60);
-//		tr.getInformationElements().add(iEIPVersion);
+		InformationElement iEIPVersion = new InformationElement();
+		iEIPVersion.setFieldLength(1);
+		iEIPVersion.setInformationElementID(60);
+		tr.getInformationElements().add(iEIPVersion);
 		return tr;
 	}
 }
