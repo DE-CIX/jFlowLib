@@ -174,7 +174,7 @@ public class IPFIXGenerator {
 			long seqNumber = 0;
 			var curTime = System.currentTimeMillis();
 			var count = 0;
-			while (count < 11) {
+			while (true) {
 				// Message header updating
 				mh.setSequenceNumber(seqNumber);
 				mh.setExportTime(new Date());
@@ -213,10 +213,10 @@ public class IPFIXGenerator {
 				datagramSocket = new DatagramSocket(exporterPortValue);
 				datagramSocket.send(dp);
 				datagramSocket.close();
-				System.out.println("Sending: " + mh);
 				if(System.currentTimeMillis() - curTime > 1000) {
 					System.out.println("Current Rate (flows/second):");
 					System.out.println(count * 34);
+					System.out.println("Sample Packet: " + mh);
 					count = 0;
 					curTime = System.currentTimeMillis();
 				}
