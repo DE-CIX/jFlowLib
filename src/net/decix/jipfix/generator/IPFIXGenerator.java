@@ -42,11 +42,14 @@ public class IPFIXGenerator {
 
 
 		List<Callable<Void>> jobs = new ArrayList<>();
+		var index = 1;
 		for (String p : port) {
+			int finalIndex = index;
 			jobs.add(() -> {
-				run(p);
+				run(p, finalIndex);
 				return null;
 			});
+			index = index + 1;
 		}
 		try {
 			executor.invokeAll(jobs);
@@ -60,7 +63,7 @@ public class IPFIXGenerator {
 
 
 
-	public static void run(String p) {
+	public static void run(String p, int threadNumber) {
 		try {
 
 			var ipVersionValue = 4;
@@ -142,6 +145,12 @@ public class IPFIXGenerator {
 					)
 			);
 
+			var anomalyEdgeMap = new ArrayList<>(
+					List.of(
+						List.of("10.1.1.4", "4230", "10.1.1.25", "2023", "256", "1024", "50")
+					)
+			);
+
 
 
 
@@ -198,6 +207,31 @@ public class IPFIXGenerator {
 					shDataRecord.addDataRecord(l2ip);
 				}
 
+				var ano = rand.nextInt(5000);
+
+				if (ano == 1) {
+					for(List<String> arr: anomalyEdgeMap) {
+						var srcIPv4Value = (Inet4Address) Inet4Address.getByName(arr.get(0));
+						var destIPv4Value = (Inet4Address) Inet4Address.getByName(arr.get(2));
+						var srcPortValue = Integer.parseInt(arr.get(1));
+						var destPortValue = Integer.parseInt(arr.get(3));
+						var TX = Integer.parseInt(arr.get(4));
+						var RX = Integer.parseInt(arr.get(5));
+						long duration = Long.parseLong(arr.get(6));
+
+						L2IPDataRecord l2ip = getDataRecord((short) ipVersionValue,
+								transportProtocolValue,
+								srcIPv4Value,
+								destIPv4Value,
+								srcPortValue,
+								destPortValue,
+								TX,
+								RX,
+								duration);
+						shDataRecord.addDataRecord(l2ip);
+					}
+				}
+
 
 
 				mh.addSetHeader(shDataRecord);
@@ -250,9 +284,7 @@ public class IPFIXGenerator {
 				datagramSocket.send(dp);
 				datagramSocket.close();
 				if(System.currentTimeMillis() - curTime > 1000) {
-					System.out.println("Current Rate (flows/second):");
-					System.out.println(count * 34);
-					System.out.println("Sample Packet: " + mh);
+					System.out.printf("Thread number: %s Current Rate (flows/second): %s \n", threadNumber, count * 34);
 					count = 0;
 					curTime = System.currentTimeMillis();
 				}
