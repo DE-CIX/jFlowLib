@@ -1,32 +1,24 @@
 package net.decix.jipfix.generator;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Inet4Address;
-import java.net.Inet6Address;
-import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 import net.decix.jipfix.header.InformationElement;
 import net.decix.jipfix.header.L2IPDataRecord;
 import net.decix.jipfix.header.MessageHeader;
-import net.decix.jipfix.header.OptionTemplateRecord;
-import net.decix.jipfix.header.SamplingDataRecord;
 import net.decix.jipfix.header.SetHeader;
 import net.decix.jipfix.header.TemplateRecord;
 import net.decix.util.HeaderBytesException;
 
 import org.savarese.vserv.tcpip.IPPacket;
 import org.savarese.vserv.tcpip.OctetConverter;
-import org.savarese.vserv.tcpip.TCPPacket;
 import org.savarese.vserv.tcpip.UDPPacket;
 
-import com.savarese.rocksaw.net.RawSocket;
 
 public class IPFIXGenerator {
 	public static void main(String args[]) {
@@ -116,12 +108,13 @@ public class IPFIXGenerator {
 			destIp.add("10.43.7.116");
 			destIp.add("10.43.15.1");
 
+			long seqNumber = 0;
+			var curTime = System.currentTimeMillis();
+			var count = 0;
 
 
 
-
-
-
+			while (true) {
 
 			MessageHeader mh = new MessageHeader();
 			mh.setVersionNumber(10);
@@ -171,10 +164,6 @@ public class IPFIXGenerator {
 			// socket handling
 			DatagramSocket datagramSocket = null;
 
-			long seqNumber = 0;
-			var curTime = System.currentTimeMillis();
-			var count = 0;
-			while (true) {
 				// Message header updating
 				mh.setSequenceNumber(seqNumber);
 				mh.setExportTime(new Date());
@@ -184,6 +173,7 @@ public class IPFIXGenerator {
 
 				var exporterIPv4Value =  (Inet4Address) Inet4Address.getByName("10.43.7.117");
 				var collectorIPv4Value = (Inet4Address) Inet4Address.getByName(nextIp); //192.168.1.254 //10.43.7.116"
+//				var collectorIPv4Value = (Inet4Address) Inet4Address.getByName("10.70.80.1");
 				var exporterPortValue = Integer.parseInt("4003");
 				var collectorPortValue = Integer.parseInt("2055");
 
@@ -237,12 +227,18 @@ public class IPFIXGenerator {
 	}
 
 	private static L2IPDataRecord getDataRecord(short ipVersionValue, short transportProtocolValue, Inet4Address srcIPv4Value, Inet4Address destIPv4Value, int srcPortValue, int destPortValue, int TX, int RX, long duration) throws UnknownHostException {
+
+
+		Random rand = new Random();
+
+		var byteRandom = rand.nextInt(30);
+		var durationRandom = rand.nextInt(5);
 		L2IPDataRecord l2ip = new L2IPDataRecord();
 		l2ip.setSourceIPv4Address(srcIPv4Value);
 		l2ip.setDestinationIPv4Address(destIPv4Value);
-		l2ip.setTxCount(TX);
-		l2ip.setRxCount(RX);
-		l2ip.setFlowDuration(duration);
+		l2ip.setTxCount(TX + byteRandom);
+		l2ip.setRxCount(RX + byteRandom);
+		l2ip.setFlowDuration(duration + durationRandom);
 		l2ip.setSourceTransportPort(srcPortValue);
 		l2ip.setDestinationTransportPort(destPortValue);
 		l2ip.setProtocolIdentifier(transportProtocolValue);

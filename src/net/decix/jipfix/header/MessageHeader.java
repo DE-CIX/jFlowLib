@@ -88,9 +88,6 @@ public class MessageHeader extends AbstractHeader implements IPFIXEntity {
 		// trim down this one.
 		int length = 0;
 		for (SetHeader header : setHeaders) {
-			System.out.println(header);
-			System.out.println(header.getLength());
-
 			length += header.getLength();
 		}
 		setLength(length + HEADERLENGTH);

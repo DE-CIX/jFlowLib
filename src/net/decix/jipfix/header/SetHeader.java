@@ -223,13 +223,13 @@ public class SetHeader extends AbstractHeader implements IPFIXEntity {
 			sb.append(record);
 			sb.append(", ");
 		}
-		sb.append("Option template records: ");
-		sb.append(optionTemplateRecords.size());
-		sb.append(", ");
-		for (OptionTemplateRecord record : optionTemplateRecords) {
-			sb.append(record);
-			sb.append(", ");
-		}
+//		sb.append("Option template records: ");
+//		sb.append(optionTemplateRecords.size());
+//		sb.append(", ");
+//		for (OptionTemplateRecord record : optionTemplateRecords) {
+//			sb.append(record);
+//			sb.append(", ");
+//		}
 		return sb.toString();
 	}
 }
