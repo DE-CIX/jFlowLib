@@ -7,6 +7,9 @@ import java.net.Inet4Address;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import net.decix.jipfix.header.InformationElement;
 import net.decix.jipfix.header.L2IPDataRecord;
@@ -21,7 +24,36 @@ import org.savarese.vserv.tcpip.UDPPacket;
 
 
 public class IPFIXGenerator {
-	public static void main(String args[]) {
+	public static void main(String args[]) throws InterruptedException {
+
+
+		ExecutorService executor = Executors.newFixedThreadPool(3);
+
+		var destIp = new ArrayList<String>();
+		destIp.add("10.43.7.116");
+		destIp.add("10.43.15.1");
+
+
+		List<Callable<Void>> jobs = new ArrayList<>();
+		for (String ip : destIp) {
+			jobs.add(() -> {
+				run(ip);
+				return null;
+			});
+		}
+		try {
+			executor.invokeAll(jobs);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+
+		executor.shutdown();
+
+	}
+
+
+
+	public static void run(String destIp) {
 		try {
 
 			var ipVersionValue = 4;
@@ -100,13 +132,11 @@ public class IPFIXGenerator {
 							List.of("10.1.1.10", "11211", "10.1.1.11", "7000", "8192", "256", "300"),
 							List.of("10.1.1.10", "11211", "10.1.1.11", "7000", "8192", "256", "300"),
 							List.of("10.1.1.10", "11211", "10.1.1.11", "7000", "8192", "256", "300")
-							)
+					)
 			);
 
 
-			var destIp = new ArrayList<String>();
-			destIp.add("10.43.7.116");
-			destIp.add("10.43.15.1");
+
 
 			long seqNumber = 0;
 			var curTime = System.currentTimeMillis();
@@ -114,65 +144,67 @@ public class IPFIXGenerator {
 
 
 
+
+
 			while (true) {
 
-			MessageHeader mh = new MessageHeader();
-			mh.setVersionNumber(10);
-			mh.setObservationDomainID(67108864);
+				MessageHeader mh = new MessageHeader();
+				mh.setVersionNumber(10);
+				mh.setObservationDomainID(67108864);
 
-			// Set header for the template
-			SetHeader shTemplate = new SetHeader();
-			shTemplate.setSetID(2);
+				// Set header for the template
+				SetHeader shTemplate = new SetHeader();
+				shTemplate.setSetID(2);
 
-			TemplateRecord tr = getTemplateRecord();
-
-
-			shTemplate.addTemplateRecord(tr);
-
-			mh.addSetHeader(shTemplate);
-
-			// Set header for the L2IP
-			SetHeader shDataRecord = new SetHeader();
-			shDataRecord.setSetID(306);
-
-			for(List<String> arr: edgeMap) {
-
-				var srcIPv4Value = (Inet4Address) Inet4Address.getByName(arr.get(0));
-				var destIPv4Value = (Inet4Address) Inet4Address.getByName(arr.get(2));
-				var srcPortValue = Integer.parseInt(arr.get(1));
-				var destPortValue = Integer.parseInt(arr.get(3));
-				var TX = Integer.parseInt(arr.get(4));
-				var RX = Integer.parseInt(arr.get(5));
-				long duration = Long.parseLong(arr.get(6));
-
-				L2IPDataRecord l2ip = getDataRecord((short) ipVersionValue,
-						transportProtocolValue,
-						srcIPv4Value,
-						destIPv4Value,
-						srcPortValue,
-						destPortValue,
-						TX,
-						RX,
-						duration);
-				shDataRecord.addDataRecord(l2ip);
-			}
+				TemplateRecord tr = getTemplateRecord();
 
 
+				shTemplate.addTemplateRecord(tr);
 
-			mh.addSetHeader(shDataRecord);
+				mh.addSetHeader(shTemplate);
 
-			// socket handling
-			DatagramSocket datagramSocket = null;
+				// Set header for the L2IP
+				SetHeader shDataRecord = new SetHeader();
+				shDataRecord.setSetID(306);
+
+				for(List<String> arr: edgeMap) {
+
+					var srcIPv4Value = (Inet4Address) Inet4Address.getByName(arr.get(0));
+					var destIPv4Value = (Inet4Address) Inet4Address.getByName(arr.get(2));
+					var srcPortValue = Integer.parseInt(arr.get(1));
+					var destPortValue = Integer.parseInt(arr.get(3));
+					var TX = Integer.parseInt(arr.get(4));
+					var RX = Integer.parseInt(arr.get(5));
+					long duration = Long.parseLong(arr.get(6));
+
+					L2IPDataRecord l2ip = getDataRecord((short) ipVersionValue,
+							transportProtocolValue,
+							srcIPv4Value,
+							destIPv4Value,
+							srcPortValue,
+							destPortValue,
+							TX,
+							RX,
+							duration);
+					shDataRecord.addDataRecord(l2ip);
+				}
+
+
+
+				mh.addSetHeader(shDataRecord);
+
+				// socket handling
+				DatagramSocket datagramSocket = null;
 
 				// Message header updating
 				mh.setSequenceNumber(seqNumber);
 				mh.setExportTime(new Date());
 				seqNumber++;
 				count = count + 1;
-				var nextIp = destIp.get(rand.nextInt(2));
+//				var nextIp = destIp.get(rand.nextInt(2));
 
 				var exporterIPv4Value =  (Inet4Address) Inet4Address.getByName("10.43.7.117");
-				var collectorIPv4Value = (Inet4Address) Inet4Address.getByName(nextIp); //192.168.1.254 //10.43.7.116"
+				var collectorIPv4Value = (Inet4Address) Inet4Address.getByName(destIp); //192.168.1.254 //10.43.7.116"
 //				var collectorIPv4Value = (Inet4Address) Inet4Address.getByName("10.70.80.1");
 				var exporterPortValue = Integer.parseInt("4003");
 				var collectorPortValue = Integer.parseInt("2055");
@@ -191,7 +223,10 @@ public class IPFIXGenerator {
 				udp.setSourcePort(exporterPortValue);
 
 				byte[] pktData = new byte[udp.size()];
+				if (destIp.equals("10.43.15.1")) {
+					exporterPortValue = 4005;
 
+				}
 				udp.setDestinationAsWord(OctetConverter.octetsToInt(collectorIPv4Value.getAddress()));
 				udp.setSourceAsWord(OctetConverter.octetsToInt(exporterIPv4Value.getAddress()));
 				System.arraycopy(data, 0, pktData, 28, data.length);
@@ -224,8 +259,7 @@ public class IPFIXGenerator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
+		}
 	private static L2IPDataRecord getDataRecord(short ipVersionValue, short transportProtocolValue, Inet4Address srcIPv4Value, Inet4Address destIPv4Value, int srcPortValue, int destPortValue, int TX, int RX, long duration) throws UnknownHostException {
 
 
