@@ -27,17 +27,24 @@ public class IPFIXGenerator {
 	public static void main(String args[]) throws InterruptedException {
 
 
-		ExecutorService executor = Executors.newFixedThreadPool(3);
+		ExecutorService executor = Executors.newFixedThreadPool(5);
 
 		var destIp = new ArrayList<String>();
 		destIp.add("10.43.7.116");
 		destIp.add("10.43.15.1");
 
+		var port = new ArrayList<String>();
+		port.add("4002");
+		port.add("4003");
+		port.add("4004");
+		port.add("4005");
+
+
 
 		List<Callable<Void>> jobs = new ArrayList<>();
-		for (String ip : destIp) {
+		for (String p : port) {
 			jobs.add(() -> {
-				run(ip);
+				run(p);
 				return null;
 			});
 		}
@@ -53,7 +60,7 @@ public class IPFIXGenerator {
 
 
 
-	public static void run(String destIp) {
+	public static void run(String p) {
 		try {
 
 			var ipVersionValue = 4;
@@ -142,7 +149,9 @@ public class IPFIXGenerator {
 			var curTime = System.currentTimeMillis();
 			var count = 0;
 
-
+			var destIp = new ArrayList<String>();
+			destIp.add("10.43.7.116");
+			destIp.add("10.43.15.1");
 
 
 
@@ -201,12 +210,14 @@ public class IPFIXGenerator {
 				mh.setExportTime(new Date());
 				seqNumber++;
 				count = count + 1;
-//				var nextIp = destIp.get(rand.nextInt(2));
+				var nextIp = destIp.get(rand.nextInt(2));
 
 				var exporterIPv4Value =  (Inet4Address) Inet4Address.getByName("10.43.7.117");
-				var collectorIPv4Value = (Inet4Address) Inet4Address.getByName(destIp); //192.168.1.254 //10.43.7.116"
+				var collectorIPv4Value = (Inet4Address) Inet4Address.getByName(nextIp); //192.168.1.254 //10.43.7.116"
 //				var collectorIPv4Value = (Inet4Address) Inet4Address.getByName("10.70.80.1");
-				var exporterPortValue = Integer.parseInt("4003");
+//				var exporterPortValue = Integer.parseInt("4003");
+				var exporterPortValue = Integer.parseInt(p);
+
 				var collectorPortValue = Integer.parseInt("2055");
 
 				byte[] data = new byte[mh.getBytes().length];
